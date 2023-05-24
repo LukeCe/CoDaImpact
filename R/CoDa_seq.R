@@ -1,8 +1,7 @@
 #' A sequence connecting two points in a simplex
 #'
 #' @details
-#' The sequence is evenly spaced corresponds to a straight line in the simplex geometry.
-#' It is derived in ilr-space using standard linear algebra techniques and then back transformed to the simplex.
+#' The sequence is evenly spaced and corresponds to a straight line in the simplex geometry.
 #' If no end point is provided the line will connect the initial point with the first summit of the simplex.
 #' Since exact zeros are not handled by the ilr they are replaced by a small constant.
 #'
@@ -59,7 +58,9 @@ CoDa_seq <- function(
     warning(sprintf(warn, epsilon))
     comp_from[comp_from == 0] <- epsilon
     comp_from <- comp_from/sum(comp_from)
-    comp_to[comp_to == 0] <- epsilon
+
+    comp_to[comp_to == 0] <- comp_from[comp_to == 0] * epsilon
+    comp_to[comp_to == 0] <- min(comp_to) * epsilon
     comp_to <- comp_to/sum(comp_to)
   }
 
@@ -77,7 +78,7 @@ CoDa_seq <- function(
     ilr_path <- do.call("rbind", ilr_path)
     CoDa_seq <- rbind(ilrInv(ilr_path), CoDa_seq)
   }
-  row.names(CoDa_seq) <- seq(-n_steps *add_opposite, n_steps)
+  row.names(CoDa_seq) <- seq(-n_steps * add_opposite, n_steps)
 
 
   if (!is.null(names(comp_from)))
@@ -152,7 +153,7 @@ CoDa_path <- function(
 
   n_steps <- round(n_steps)
   stopifnot(
-    all(comp_direc > 0, comp_from > 0),
+    all(comp_direc >= 0, comp_from >= 0),
     length(comp_direc) > 2,
     length(comp_from) == length(comp_direc),
     is.numeric(step_size) & length(step_size) == 1,
@@ -162,12 +163,24 @@ CoDa_path <- function(
     names(comp_from) <- names(comp_direc)
 
 
+  zero_values_present <- any(comp_from == 0, comp_direc == 0)
+  if (zero_values_present) {
+    epsilon <- 1e-10
+    warn <- "Zero values in `comp_from` or `comp_direc` are not permitted and were replaced by %s!'"
+    warning(sprintf(warn, epsilon))
+    comp_from[comp_from == 0] <- epsilon
+    comp_from <- comp_from/sum(comp_from)
+
+    comp_direc[comp_direc == 0] <- comp_from[comp_direc == 0] * epsilon
+    comp_direc[comp_direc == 0] <- min(comp_direc) * epsilon
+    comp_direc <- comp_direc/sum(comp_direc)
+  }
+
   ilr_direc <- ilr(comp_direc)
   ilr_start <- ilr(comp_from)
   if (dir_from_start)
     ilr_direc <- ilr_start - ilr_direc
-  if (all(ilr_direc == 0))
-    stop("The provided information does not identify a direction in the simplex!")
+
   ilr_direc <- ilr_direc/sqrt(sum(ilr_direc^2))
 
   # calculate the end point and use CoDa_seq
