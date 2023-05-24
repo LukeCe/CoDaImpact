@@ -1,14 +1,23 @@
 Package: CoDaImpact
-Title: What the Package Does (One Line, Title Case)
+Title: Tools for interpreting Composition Data Regression
 Version: 0.0.0.9000
-Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+Authors@R: c(
+    person("Lukas", "Dargel", role = c("aut", "cre"),
+           email = "lukas.dargel@mailbox.org",
+           comment = c(ORCID = "0000-0002-4839-506X")),
+    person("Christine", "Thomas", role = c("aut"),
+           email = "christine.thomas@tse-fr.eu"),
+    person("Rodrigue", "XXX", role = "ctb"),
+    person("Sijia", "Pan", role = "ctb"),
+    person("Iban", "XXX", role = "ctb"))
+Description: 
+    The package implements elasticities for interpreting CoDa regression models in the simplex.
+    It is designed as an add-on to the composition package and its ecosystem.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 URL: https://github.com/LukeCe/CoDaImpact
 BugReports: https://github.com/LukeCe/CoDaImpact/issues
+Imports: 
+    compositions
