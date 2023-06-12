@@ -4,3 +4,7 @@
 .httr-oauth
 .DS_Store
 man
+
+
+data-raw/*
+!data-raw/*.R
