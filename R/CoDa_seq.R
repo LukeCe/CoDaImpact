@@ -83,7 +83,11 @@ CoDa_seq <- function(
 
   if (!is.null(names(comp_from)))
     colnames(CoDa_seq) <- names(comp_from)
-  return(as.data.frame(CoDa_seq * Tstart))
+
+
+  CoDa_seq <- as.data.frame(CoDa_seq * Tstart)
+  attr(CoDa_seq, "step_size") <- sqrt(sum(ilr_dir^2))/n_steps
+  return(CoDa_seq)
 }
 
 
