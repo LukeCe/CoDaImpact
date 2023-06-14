@@ -11,6 +11,28 @@ expect_equal(
   name_invTrans("log(a)"),
   "log(a)")
 
+# ---- test whichTrans --------------------------------------------------------
+expect_equal({
+  tt <- rice_yields[1:10,]
+  tt$"ilr(TEMPERATURES)" <- ilr(tt$TEMPERATURES)
+  whichTrans(tt["ilr(TEMPERATURES)"])[["name"]]
+}, "ilr")
+
+expect_equal({
+  tt <- rice_yields[1:10,]
+  tt$"ilr(TEMPERATURES)" <- ilr(tt$TEMPERATURES)
+  whichTrans(tt["ilr(TEMPERATURES)"])[["base"]]
+}, {
+  V <- ilrBase(D = 3)
+  rownames(V) <- colnames(tt$TEMPERATURES)
+  colnames(V) <- paste0("ilr(TEMPERATURES)", 1:2)
+  V
+})
+
+expect_error({
+  whichTrans(tt$TEMPERATURES)
+})
+
 
 # ---- test CoDa_path --------------------------------------------------
 expect_true({

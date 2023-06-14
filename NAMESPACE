@@ -2,5 +2,6 @@
 
 export(CoDa_path)
 export(CoDa_seq)
+importFrom(compositions,clrInv)
 importFrom(compositions,ilr)
 importFrom(compositions,ilrInv)

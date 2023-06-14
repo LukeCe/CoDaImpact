@@ -55,3 +55,11 @@ expect_true({
   res <- CoDa_path(res,n_steps = 1,add_opposite = TRUE)
   all(res[2,] == 1/c(3,3))
 })
+
+
+expect_true({
+  res <- c(A =.4,B = .3, C= .3)
+  res <- CoDa_path(res,n_steps = 1,add_opposite = FALSE,step_size = 1)
+  abs(1 - attr(res, "step_size")) < 1e12
+})
+
