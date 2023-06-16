@@ -22,7 +22,8 @@ transformationSummary <- function(lm_res) {
     "IS_RESPONSE"  = list(TRUE),
     "D"            = list(NA_integer_),
     "LR_TRAN"      = list(NA_character_),
-    "LR_BASE"      = list(matrix(0,0,0)),
+    "LR_BASE_F"    = list(matrix(0,0,0)),
+    "LR_BASE_K"    = list(matrix(0,0,0)),
     "COEF_COORD"   = list(matrix(0,0,0)),
     "COEF_CLR"     = list(matrix(0,0,0)),
     "COEF_SIMPLEX" = list(matrix(0,0,0)))
@@ -36,18 +37,21 @@ transformationSummary <- function(lm_res) {
 
     i_var <- names(mod)[i]
     trans <- whichTrans(mod[i_var])
-    result$"LR_TRAN"[[i]] <- trans[["name"]]
-    result$"LR_BASE"[[i]] <- trans[["base"]]
-    result$"D"[[i]]       <- max(dim(trans[["base"]]))
+    result$"LR_TRAN"[[i]]   <- trans[["name"]]
+    result$"LR_BASE_F"[[i]] <- trans[["base_F"]]
+    result$"LR_BASE_K"[[i]] <- trans[["base_K"]]
+    result$"D"[[i]]         <- max(dim(trans[["base_F"]]))
 
     result$"NAME_COORD"[[i]]   <- i_var
-    result$"NAME_SIMPLEX"[[i]] <- name_invTrans(i_var)
+    result$"NAME_SIMPLEX"[[i]] <- if (trans[["name"]] == "") i_var else sprintf("%sInv(%s)", trans[["name"]], i_var)
 
     if (i > 1) {
       result$"IS_RESPONSE"[[i]]  <- FALSE
 
-      Vy <- result$"LR_BASE"[[1]]
-      Vx <- result$"LR_BASE"[[i]]
+      Ky <- result$"LR_BASE_K"[[1]] # K and F are both V in the case of ilr
+      Fy <- result$"LR_BASE_F"[[1]]
+      Kx <- result$"LR_BASE_K"[[i]]
+      Fx <- result$"LR_BASE_F"[[i]]
       Dx <- result$"D"[[i]]
       i_coef <- max(i_coef) + seq_len(max(1,Dx - 1))
 
@@ -57,19 +61,19 @@ transformationSummary <- function(lm_res) {
 
       if (y_is_compo & x_is_compo) {
         result$"COEF_COORD"[[i]]   <- coef_mat[i_coef,,drop = FALSE]
-        result$"COEF_CLR"[[i]]     <- Vx %*% result$"COEF_COORD"[[i]] %*% t(Vy)
+        result$"COEF_CLR"[[i]]     <- t(Fx) %*% result$"COEF_COORD"[[i]] %*% t(Ky)
         result$"COEF_SIMPLEX"[[i]] <- result$"COEF_CLR"[[i]]
       } # 1. (YX)
 
       if (y_is_compo & !x_is_compo) {
         result$"COEF_COORD"[[i]]   <- coef_mat[i_var,,drop = FALSE]
-        result$"COEF_CLR"[[i]]     <- result$"COEF_COORD"[[i]] %*% t(Vy)
+        result$"COEF_CLR"[[i]]     <- result$"COEF_COORD"[[i]] %*% t(Ky)
         result$"COEF_SIMPLEX"[[i]] <- clrInv(result$"COEF_CLR"[[i]])
       } # 2. (Y)
 
       if (!y_is_compo & x_is_compo) {
         result$"COEF_COORD"[[i]]   <- coef_mat[i_coef,,drop = FALSE]
-        result$"COEF_CLR"[[i]]     <- Vx %*% result$"COEF_COORD"[[i]]
+        result$"COEF_CLR"[[i]]     <- t(Fx) %*% result$"COEF_COORD"[[i]]
         result$"COEF_SIMPLEX"[[i]] <- t(clrInv(t(result$"COEF_CLR"[[i]])))
       } # 3. (X)
 
@@ -98,7 +102,7 @@ name_invTrans <- function(x) {
 whichTrans <- function(x) {
 
   stopifnot(is.data.frame(x) & length(x) == 1)
-  resTrans <- function(n = "",b = matrix(0,0,0)) list(name = n, base = b)
+  resTrans <- function(n = "", bF = matrix(0,0,0), bK = matrix(0,0,0)) list(name = n, base_F = bF, base_K = bK)
   if (!inherits(x[[1]], what = "rmult"))
     return(resTrans())
 
@@ -110,13 +114,29 @@ whichTrans <- function(x) {
   VVo <- tcrossprod(V)
   D <- nrow(VVo)
 
-  if (all(abs(VVi - diag(nrow(VVi))) < 1e-12))
-    return(resTrans("ilr",V))
+  r0 <- function(x) round(x, 12)
+  if (all(r0(VVi) == diag(D-1)))
+    return(resTrans("ilr",t(V), V))
 
-  if (all(abs(VVi - clrBase(D)[-1,-1, drop = FALSE]) < 1e-12))
-    return(resTrans("alr",V))
+
+  F_alr <- alr_K2F(V)
+  K_alr <- V
+  KF <- K_alr %*% F_alr
+  FK <- F_alr %*% K_alr
+  if (all(r0(FK - diag(D-1)) == 0) && all(r0(KF - clrBase(D)) == 0))
+
+    return(resTrans("alr", F_alr, K_alr))
 
   stop("Transformation not identifiable!")
+}
+
+
+#' @keywords
+alr_K2F <- function(K_alr) {
+  i_ref <- which.min(rowSums(K_alr))
+  F_alr <- 0*K_alr - 1
+  F_alr[-i_ref,] <- diag(min(dim(K_alr)))
+  return(t(F_alr))
 }
 
 
