@@ -1,11 +1,11 @@
 #' Summarize the transformations in a CoDa model
 #'
 #' Extract from a CoDa model estimated by `lm()` all information related to the
-#' log-ratio transformations of variables and parameters.
+#' log-ratio transformations of the variables and the parameters.
 #'
 #' The structure of the object resembles a data.frame, where rows correspond
-#' to the variables and columns to diffrent information sets related to the
-#' transformations invloved with each variable.
+#' to the variables and columns to different information sets related to the
+#' transformations involved with each variable.
 #'
 #' @importFrom compositions clrInv
 #' @keywords internal
@@ -16,28 +16,22 @@ transformationSummary <- function(lm_res) {
   if ("(Intercept)" %in% rownames(coef_mat))
     mod <- cbind(mod[1], "(Intercept)" = 1, mod[-1])
 
-  mat0 <- list(matrix(0,0,0))
   info_list <- list(
     "NAME_COORD"   = list(NA_character_),
     "NAME_SIMPLEX" = list(NA_character_),
     "IS_RESPONSE"  = list(TRUE),
     "D"            = list(NA_integer_),
     "LR_TRAN"      = list(NA_character_),
-    "LR_BASE"      = mat0,
-    "COEF_COORD"   = mat0,
-    "COEF_CLR"     = mat0,
-    "COEF_SIMPLEX" = mat0)
+    "LR_BASE"      = list(matrix(0,0,0)),
+    "COEF_COORD"   = list(matrix(0,0,0)),
+    "COEF_CLR"     = list(matrix(0,0,0)),
+    "COEF_SIMPLEX" = list(matrix(0,0,0)))
 
   result <- data.frame()
   result[names(mod), names(info_list)] <- info_list
   for (i in seq_along(info_list)) names(result[[i]]) <- names(mod)
 
-  y_is_compo <- inherits(fitted(lm_res),"rmult")
-  if (y_is_compo) {
-    Vy <- whichTrans(mod[1])[["base"]]
-    coef_mat2 <- coef_mat %*% t(Vy)
-  }
-
+  i_coef <- 0
   for (i in seq_along(mod)) {
 
     i_var <- names(mod)[i]
@@ -52,39 +46,38 @@ transformationSummary <- function(lm_res) {
     if (i > 1) {
       result$"IS_RESPONSE"[[i]]  <- FALSE
 
-      Vx <- trans[["base"]]
+      Vy <- result$"LR_BASE"[[1]]
+      Vx <- result$"LR_BASE"[[i]]
       Dx <- result$"D"[[i]]
-      x_is_compo <- Dx >= 1
-      x_names <- paste0(i_var, if (Dx >= 3) seq(Dx-1) else "")
+      i_coef <- max(i_coef) + seq_len(max(1,Dx - 1))
 
       # Four cases....
-      # 1. (YX)
+      y_is_compo <- inherits(fitted(lm_res),"rmult")
+      x_is_compo <- Dx >= 1
+
       if (y_is_compo & x_is_compo) {
-        result$"COEF_COORD"[[i]]   <- coef_mat[x_names,,drop = FALSE]
+        result$"COEF_COORD"[[i]]   <- coef_mat[i_coef,,drop = FALSE]
         result$"COEF_CLR"[[i]]     <- Vx %*% result$"COEF_COORD"[[i]] %*% t(Vy)
         result$"COEF_SIMPLEX"[[i]] <- result$"COEF_CLR"[[i]]
-      }
+      } # 1. (YX)
 
-      # 2. (Y)
       if (y_is_compo & !x_is_compo) {
         result$"COEF_COORD"[[i]]   <- coef_mat[i_var,,drop = FALSE]
         result$"COEF_CLR"[[i]]     <- result$"COEF_COORD"[[i]] %*% t(Vy)
         result$"COEF_SIMPLEX"[[i]] <- clrInv(result$"COEF_CLR"[[i]])
-      }
+      } # 2. (Y)
 
-      # 3. (X)
       if (!y_is_compo & x_is_compo) {
-        result$"COEF_COORD"[[i]]   <- coef_mat[x_names,,drop = FALSE]
+        result$"COEF_COORD"[[i]]   <- coef_mat[i_coef,,drop = FALSE]
         result$"COEF_CLR"[[i]]     <- Vx %*% result$"COEF_COORD"[[i]]
         result$"COEF_SIMPLEX"[[i]] <- t(clrInv(t(result$"COEF_CLR"[[i]])))
-      }
+      } # 3. (X)
 
-      # 4. ( )
       if (!y_is_compo & !x_is_compo) {
         result$"COEF_COORD"[[i]]   <- coef_mat[i_var,,drop = FALSE]
         result$"COEF_CLR"[[i]]     <- coef_mat[i_var,,drop = FALSE]
         result$"COEF_SIMPLEX"[[i]] <- coef_mat[i_var,,drop = FALSE]
-      }
+      } # 4. ( )
     }
   }
   return(result)

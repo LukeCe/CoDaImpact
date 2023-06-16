@@ -33,36 +33,63 @@ expect_error({
   whichTrans(tt$TEMPERATURES)
 })
 
+# ---- transformationSummary 3. (X compo) -------------------------------------
+expect_equal({
+  V <- ilrBase(D = 3)
+  lr <- function(x) ilr(x, V)
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  # res["lr(TEMPERATURES)","COEF_COORD"][[1]] # differ
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},
+{
+  V <- ilrBase(D = 3)[3:1,]
+  lr <- function(x) ilr(x, V)
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  # res["lr(TEMPERATURES)","COEF_COORD"][[1]] # differ
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},info = "Two diffrent ilr bases.")
 
-# ---- test CoDa_path --------------------------------------------------
-expect_true({
-  res <- c(A =.4,B = .3, C= .3)
-  res <- CoDa_path(res,n_steps = 1)
-  is.data.frame(res)
+expect_equal({
+  lr <- function(x) alr(x, ivar = 1)
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},
+{
+  lr <- function(x) alr(x, ivar = 3)
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},info = "Two diffrent alr bases.")
+
+
+expect_equal({
+  lr <- function(x) alr(x, ivar = 1)
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},
+{
+  lr <- function(x) alr(x, ivar = 3)
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},info = "Two diffrent ilr and alr bases.")
+
+
+
+expect_equal({
+  lr <- compositions::ilr
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+},
+{
+  lr <- compositions::alr
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
+  res["lr(TEMPERATURES)","COEF_SIMPLEX"][[1]]
 })
-
-expect_true({
-  res <- c(A =.4,B = .3, C= .3)
-  res <- CoDa_path(res,n_steps = 1)
-  all(colnames(res) == c("A","B","C"))
-})
-
-expect_true({
-  res <- c(A =.4,B = .3, C= .3)
-  res <- CoDa_path(res,n_steps = 1,add_opposite = TRUE)
-  all(dim(res) == c(3,3))
-})
-
-expect_true({
-  res <- c(A =.4,B = .3, C= .3)
-  res <- CoDa_path(res,n_steps = 1,add_opposite = TRUE)
-  all(res[2,] == 1/c(3,3))
-})
-
-
-expect_true({
-  res <- c(A =.4,B = .3, C= .3)
-  res <- CoDa_path(res,n_steps = 1,add_opposite = FALSE,step_size = 1)
-  abs(1 - attr(res, "step_size")) < 1e12
-})
-
+compo
