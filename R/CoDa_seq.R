@@ -49,6 +49,11 @@ CoDa_seq <- function(
     is.numeric(comp_from),
     is.numeric(comp_to))
 
+  if (isTRUE(nrow(comp_from) > 1)) stop("comp_from must be a single compostional vector!")
+  if (isTRUE(nrow(comp_to) > 1)) stop("comp_to must be a single compostional vector!")
+  if (is.matrix(comp_from)) comp_from <- comp_from[1,]
+  if (is.matrix(comp_to)) comp_to <- comp_to[1,]
+
   # save total and replace zeros
   Tstart <- sum(comp_from)
   zero_values_present <- any(comp_from == 0, comp_to == 0)
@@ -162,6 +167,12 @@ CoDa_path <- function(
     length(comp_from) == length(comp_direc),
     is.numeric(step_size) & length(step_size) == 1,
     isTRUE(n_steps >= 1))
+
+
+  if (isTRUE(nrow(comp_from) > 1)) stop("comp_from must be a single compostional vector!")
+  if (isTRUE(nrow(comp_direc) > 1)) stop("comp_direc must be a single compostional vector!")
+  if (is.matrix(comp_from)) comp_from <- comp_from[1,]
+  if (is.matrix(comp_direc)) comp_direc <- comp_direc[1,]
 
   if (is.null(names(comp_from)))
     names(comp_from) <- names(comp_direc)

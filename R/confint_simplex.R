@@ -28,7 +28,7 @@ confint.clr <- function(res_lm, x_var_name, level = .95) {
   result <- vector("list", length = ncol(est_coef))
   for (i in seq_along(result)) {
     result[[i]] <- data.frame(
-      "Y" = rownames(vcov_y),
+      "Y" = colnames(vcov_y),
       "X" = colnames(est_coef)[i],
       "est" = est_coef[,i],
       "sd"  = sd_coef[,i],

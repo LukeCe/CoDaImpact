@@ -133,17 +133,23 @@ whichTrans <- function(x) {
     return(resTrans())
 
   V <- compositions:::gsi.getV(x[[1]])
-  colnames(V) <- paste0(names(x), if (ncol(V) == 1) "" else seq_len(ncol(V)))
-  rownames(V) <- colnames(attr(x[[1]],"orig"))
-
   VVi <- crossprod(V)
   VVo <- tcrossprod(V)
   D <- nrow(VVo)
+
+
+  # ilr tests and names
+  colnames(V) <- paste0(names(x), if (ncol(V) == 1) "" else seq_len(ncol(V)))
+  rownames(V) <- colnames(attr(x[[1]],"orig"))
+  no_rnames <- is.null(rownames(V))
+  if (no_rnames) rownames(V) <- paste0(name_invTrans(names(x), "ilr"), seq_len(D))
 
   r0 <- function(x) round(x, 12)
   if (all(r0(VVi) == diag(D-1)))
     return(resTrans("ilr",t(V), V))
 
+  # alr tests and names
+  if (no_rnames) rownames(V) <- paste0(name_invTrans(names(x), "alr"), seq_len(D))
   K_alr <- V
   F_alr <- alr_K2F(K_alr)
   KF <- K_alr %*% F_alr
