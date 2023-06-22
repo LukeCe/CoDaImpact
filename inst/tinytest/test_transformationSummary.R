@@ -1,18 +1,5 @@
 library("compositions")
 
-# ---- test name_invTrans -----------------------------------------------------
-expect_equal(
-  name_invTrans("ilr   (a)"),
-  "ilrInv(ilr   (a))")
-
-expect_equal(
-  name_invTrans("alr(a)"),
-  "alrInv(alr(a))")
-
-expect_equal(
-  name_invTrans("log(a)"),
-  "log(a)")
-
 # ---- test whichTrans --------------------------------------------------------
 expect_equal({
   tt <- rice_yields[1:10,]
@@ -31,24 +18,33 @@ expect_equal({
   V
 })
 
+
+expect_equal({
+  tt <- rice_yields[1:10,]
+  tt$"alr(TEMPERATURES)" <- alr(tt$TEMPERATURES)
+  whichTrans(tt["alr(TEMPERATURES)"])
+}, {
+  F_alr <- cbind(diag(2),-1L)
+  dimnames(F_alr) <- list(c("alr(TEMPERATURES)1", "alr(TEMPERATURES)2"),c("LOW","MIDDLE","HIGH"))
+  K_alr <- clrBase(3)[,-3]
+  dimnames(K_alr) <- dimnames(t(F_alr))
+  list("name" = "alr", "base_F" = F_alr, "base_K" = K_alr)
+})
+
 expect_error({
   whichTrans(rice_yields[1:10,]$TEMPERATURES)
 })
 
 # ---- alr_K2F ----------------------------------------------------------------
-expect_equal({
-  K <- clrBase(3)[,-3]
-  alr_K2F(K)
-},
-  cbind(diag(2),-1)
-)
+expect_equal(
+  clrBase(3)[,-3] |> alr_K2F(),
+  cbind(diag(2),-1),
+  info = "F from K with ref = 3")
 
-expect_equal({
-  K <- clrBase(3)[,-2]
-  alr_K2F(K)
-},
-cbind(c(1,0),-1,c(0,1))
-)
+expect_equal(
+  clrBase(3)[,-2] |> alr_K2F(),
+  cbind(c(1,0),-1,c(0,1)),
+  info = "F from K with ref = 2")
 
 # ---- transformationSummary 1. (YX compo) ------------------------------------
 expect_equal({
@@ -221,11 +217,23 @@ expect_equal({
   lr <- compositions::ilr
   tt <- rice_yields[1:20,]
   res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
-  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+  res["lr(TEMPERATURES)",c("COEF_CLR")]
 },
 {
   lr <- compositions::alr
   tt <- rice_yields[1:20,]
   res <- transformationSummary(lm(YIELD ~ PRECIPITATION + lr(TEMPERATURES), data = tt))
-  res["lr(TEMPERATURES)",c("COEF_SIMPLEX","COEF_CLR")]
+  res["lr(TEMPERATURES)",c("COEF_CLR")]
 }, info = "Ilr and alr bases.")
+
+
+expect_equivalent({
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = tt, weights = 1:20))
+  res["YIELD","VARCOV_CLR"]
+},
+{
+  tt <- rice_yields[1:20,]
+  res <- transformationSummary(lm(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = tt))
+  res["YIELD","VARCOV_CLR"]
+}, info = "Weighted and non-weighted regression.", tolerance = 10e10)
