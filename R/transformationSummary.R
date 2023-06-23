@@ -43,7 +43,7 @@ transformationSummary <- function(lm_res) {
   Fy <- trans_Y[["base_F"]]
 
   cov_Yclr <- cov_Y <- crossprod(resid(lm_res))/(nobs(lm_res) - nrow(coef_mat))
-  if (length(Fy) > 0) cov_Yclr <- t(Fy) %*% cov_Y %*% t(Ky)
+  if (length(Fy) > 0) cov_Yclr <- t(Fy) %*% cov_Y %*% t(Ky) else dimnames(cov_Yclr) <- list(names(mod)[1])[c(1,1)]
 
   result$"NAME_COORD"[[1]]   <- names(mod)[1]
   result$"NAME_SIMPLEX"[[1]] <- name_invTrans(names(mod)[1], trans_Y[["name"]])
@@ -161,7 +161,7 @@ whichTrans <- function(x) {
 }
 
 
-#' @keywords
+#' @keywords internal
 alr_K2F <- function(K_alr) {
   i_ref <- which.min(rowSums(K_alr))
   F_alr <- (K_alr * 0) - 1
