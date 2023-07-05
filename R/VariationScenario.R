@@ -56,13 +56,13 @@ VariationScenario <- function(
     n_steps = 100,
     add_opposite = TRUE) {
 
-  stopifnot(is.character(Xvar) && length(Xvar) == 1,
+  stopifnot(is(object, "lmCoDa"),
+            is.character(Xvar) && length(Xvar) == 1,
             length(obs) == 1,
             is.numeric(inc_size) && length(inc_size) == 1,
+            missing(inc_rate) || (0 < inc_rate && inc_rate < 1),
             is.numeric(n_steps) && length(n_steps) == 1,
-            isTRUE(add_opposite) || isFALSE(add_opposite),
-            is.numeric(inc_size) && length(inc_size) == 1,
-            missing(inc_rate) || (0 < inc_rate && inc_rate < 1))
+            isTRUE(add_opposite) || isFALSE(add_opposite))
 
   clo2 <- function(x) x/rowSums(x)
   traSry <- transformationSummary(object)
@@ -111,7 +111,6 @@ VariationScenario <- function(
     Yscenario <- Xscenario %*% Xcoef + Yscenario
     Xscenario <- clo2(exp(X0[rep(1,nrow(Xscenario)),] + Xscenario))
   }
-
 
   if (!scalar_x) Xvar <- "X"
   if (!scalar_y) Yvar <- "Y" else Yvar <- rownames(traSry)[1]
