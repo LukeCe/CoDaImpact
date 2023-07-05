@@ -16,7 +16,8 @@
 #' @export
 #'
 #' @author Lukas Dargel
-#' @references
+# TODO add citation
+# @references "full cite Dargel & Thomas-Agnan (2023)"
 #' @examples
 #'
 #' # path to the first summit of the simplex
@@ -35,13 +36,13 @@ CoDa_seq <- function(
   add_opposite = FALSE) {
 
   if (missing(comp_to)){
-    comp_to <- comp_from * 0
+    comp_to <- comp_from * 1e-10
     comp_to[1] <- 1
   }
 
   n_steps <- round(n_steps)
   stopifnot(
-    length(comp_from) > 2,
+    length(comp_from) >= 2,
     length(comp_from) == length(comp_to),
     is.null(names(comp_to)) || identical(names(comp_to), names(comp_from)),
     n_steps >= 1,
@@ -76,23 +77,25 @@ CoDa_seq <- function(
   steps <- c(seq(0,1,length.out = n_steps + 1))
   ilr_path <- lapply(steps, function(s) ilr_start + s * ilr_dir)
   ilr_path <- do.call("rbind", ilr_path)
-  CoDa_seq <- rbind(ilrInv(ilr_path))
+  result <- rbind(ilrInv(ilr_path))
   if (add_opposite) {
     steps <- rev(steps[-1])
     ilr_path <- lapply(steps, function(s) ilr_start - s * ilr_dir)
     ilr_path <- do.call("rbind", ilr_path)
-    CoDa_seq <- rbind(ilrInv(ilr_path), CoDa_seq)
+    result <- rbind(ilrInv(ilr_path), result)
   }
-  row.names(CoDa_seq) <- seq(-n_steps * add_opposite, n_steps)
+  row.names(result) <- seq(-n_steps * add_opposite, n_steps)
 
 
   if (!is.null(names(comp_from)))
-    colnames(CoDa_seq) <- names(comp_from)
+    colnames(result) <- names(comp_from)
 
 
-  CoDa_seq <- as.data.frame(CoDa_seq * Tstart)
-  attr(CoDa_seq, "step_size") <- sqrt(sum(ilr_dir^2))/n_steps
-  return(CoDa_seq)
+  result <- as.data.frame(result * Tstart)
+  Anorm_dir <- sqrt(sum(ilr_dir^2))
+  attr(result, "step_size") <- Anorm_dir/n_steps
+  attr(result, "direction") <- ilrInv(ilr_dir/Anorm_dir)
+  return(result)
 }
 
 
@@ -117,7 +120,8 @@ CoDa_seq <- function(
 #' @export
 #'
 #' @author Lukas Dargel
-#' @references
+# TODO add citation
+#' @references "full cite Dargel & Thomas-Agnan (2023)"
 #' @examples
 #'
 #'
@@ -163,7 +167,7 @@ CoDa_path <- function(
   n_steps <- round(n_steps)
   stopifnot(
     all(comp_direc >= 0, comp_from >= 0),
-    length(comp_direc) > 2,
+    length(comp_direc) >= 2,
     length(comp_from) == length(comp_direc),
     is.numeric(step_size) & length(step_size) == 1,
     isTRUE(n_steps >= 1))
@@ -191,20 +195,15 @@ CoDa_path <- function(
     comp_direc <- comp_direc/sum(comp_direc)
   }
 
-  ilr_direc <- ilr(comp_direc)
   ilr_start <- ilr(comp_from)
-  if (dir_from_start)
-    ilr_direc <- ilr_start - ilr_direc
+  ilr_direc <- ilr(comp_direc) - if (dir_from_start) ilr_start else 0
 
   ilr_direc <- ilr_direc/sqrt(sum(ilr_direc^2))
 
   # calculate the end point and use CoDa_seq
   ilr_end <- ilr_start + ilr_direc * n_steps * step_size
   comp_to <- ilrInv(ilr_end)
-  return(CoDa_seq(
-    comp_from,
-    comp_to,
-    n_steps,
-    add_opposite))
+  result <- CoDa_seq(comp_from, comp_to, n_steps, add_opposite)
+  return(result)
 }
 

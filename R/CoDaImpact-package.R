@@ -1,4 +1,5 @@
 #' @keywords internal
+#' @importFrom compositions alr clr ilr alrInv clrInv ilrInv
 "_PACKAGE"
 
 ## usethis namespace: start
