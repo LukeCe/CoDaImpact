@@ -1,26 +1,52 @@
-#' Confidence intervals for clr coefficients in CoDa models
+#' @title Confidence Intervals for CoDa Model Parameters and differences
 #'
+#' @description
+#' Dargel and Thomas-Agnan (2023) show to compute variances and confidence
+#' intervals for parameters of CoDa models in log-ratio spaces.
 #'
+#' Of particular interest are the clr parameters since they can be directly
+#' interpreted as differences from an average elasticity.
+#'
+#' Another option is interpret the difference in clr parameters as these
+#' coincide with the difference in elasticities.
+#'
+#' Since CoDa models are often multivariate this function only allows to
+#' specify one explanatory variable at a time.
+#' The return value is also more complicated than in [confint.default()].
+#'
+#' @inheritParams predict.lmCoDa
+#' @param parm a character, indicating the name of one explanatory variable
+#' @param level a numeric, indicating the confidence level required
+#' @param y_ref an optional argument that indicates the reference component of
+#'   the response variable using its name or its position. \cr
+#'   This argument is only used in the Y-compositional model.
+#'   If it is supplied confidence intervals of difference are used instead of
+#'   the direct intervals of the parameters.
+#' @param ...
 #' @return data.frame
 #' @export
-confint.clr <- function(res_lm, x_var_name, level = .95, y_ref = NULL) {
+#' @author Lukas Dargel
+# TODO refs
+#' @references
+#'
+confint.lmCoDa <- function(object, parm, level = .95, y_ref = NULL, ...) {
 
   stopifnot(level > 0.5 & level < 1,
-            is.character(x_var_name) & length(x_var_name) == 1,
+            is.character(parm) & length(parm) == 1,
             is.null(y_ref) | length(y_ref) == 1)
 
-  tranSumary <- transformationSummary(res_lm)
+  tranSumary <- transformationSummary(object)
   x_vars <- rownames(tranSumary)[-1]
-  if (!x_var_name %in% x_vars) stop("x_var_name must be one of ", deparse(x_vars))
-  if (all(0 == c(tranSumary$D[[1]], tranSumary$D[[x_var_name]]))) return(NULL)
+  if (!parm %in% x_vars) stop("parm must be one of ", deparse(x_vars))
+  if (all(0 == c(tranSumary$D[[1]], tranSumary$D[[parm]]))) return(NULL)
 
-  est_coef <- t(tranSumary[["COEF_CLR"]][[x_var_name]])
-  vcov_x <- tranSumary[["VARCOV_CLR"]][[x_var_name]]
+  est_coef <- t(tranSumary[["COEF_CLR"]][[parm]])
+  vcov_x <- tranSumary[["VARCOV_CLR"]][[parm]]
   vcov_y <- tranSumary[["VARCOV_CLR"]][[1]]
   y_vars <- colnames(vcov_y)
   if (ncol(vcov_y) < 2) y_ref <- NULL
 
-  df_eq <- nobs(res_lm) - ncol(t(coef(res_lm)))
+  df_eq <- nobs(object) - ncol(t(coef(object)))
   a <- (1 - level)/2
   a <- c(a, 1 - a)
   qlevel <- qt(a, df_eq)
