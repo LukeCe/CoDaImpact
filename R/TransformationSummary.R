@@ -8,6 +8,8 @@
 #' transformations involved with each variable.
 #'
 #' @importFrom compositions clrInv
+#' @author Lukas Dargel
+#' @noRd
 #' @keywords internal
 transformationSummary <- function(lm_res) {
 
@@ -73,10 +75,10 @@ transformationSummary <- function(lm_res) {
 
     result$"NAME_COORD"[[i]]   <- i_var
     result$"NAME_SIMPLEX"[[i]] <- name_invTrans(i_var, trans_X[["name"]])
-    result$"LR_TRAN"[[i]]   <- trans_X[["name"]]
-    result$"LR_BASE_F"[[i]] <- Fx
-    result$"LR_BASE_K"[[i]] <- Kx
-    result$"D"[[i]]         <- Dx
+    result$"LR_TRAN"[[i]]      <- trans_X[["name"]]
+    result$"LR_BASE_F"[[i]]    <- Fx
+    result$"LR_BASE_K"[[i]]    <- Kx
+    result$"D"[[i]]            <- Dx
 
     # Four cases....
     y_is_compo <- inherits(fitted(lm_res),"rmult")
@@ -119,9 +121,14 @@ transformationSummary <- function(lm_res) {
 
 
 #' @keywords internal
-name_invTrans <- function(name, trans) {
-  if (trans != "") name <- sprintf("%sInv(%s)",trans,name)
-  return(name)
+name_invTrans <- function(name, trans, data_pos = 1) {
+
+  if (trans == "")
+    return(name)
+
+  call <- match.call(match.fun(trans), str2lang(name))
+  data_arg <- as.character(call)[data_pos + 1]
+  return(data_arg)
 }
 
 #' @keywords internal

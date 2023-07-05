@@ -1,5 +1,15 @@
 library("compositions")
 
+
+# ---- test name_invTrans -----------------------------------------------------
+expect_equal(name_invTrans("ilr(  CVAR  )", "ilr"), "CVAR")
+
+expect_equal(name_invTrans("ilr(  CVAR, V)", "ilr"), "CVAR")
+
+expect_equal(name_invTrans("ilr(V = ilrBase(D = 3),  CVAR)", "ilr"), "CVAR")
+
+expect_equal(name_invTrans("ilr(cbind(left, right, other))", "ilr"), "cbind(left, right, other)")
+
 # ---- test whichTrans --------------------------------------------------------
 expect_equal({
   tt <- rice_yields[1:10,]
@@ -56,7 +66,7 @@ expect_equal({
     lr1(cbind(left, right, extreme_right)) ~
       lr2(cbind(Age_1839, Age_4064)) +
       lr3(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
-      unemp_rate,
+      log(unemp_rate),
     data = tt))
   res[,c("COEF_SIMPLEX","COEF_CLR")]
 },
