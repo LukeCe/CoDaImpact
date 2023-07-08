@@ -2,38 +2,47 @@
 
 #' Estimating CoDa regression models
 #'
-#' @description
-#' CoDa regression models are models in which the response or at least
-#' one explanatory variable of compositional nature.
-#'
-#' @details
-#' This is only a thin wrapper around [lm()] followed by [ToSimplex()].
-#' Most of the work is done by the [transformationSummary()] function, which
-#' has its own documentation page, but should be reserved for internal use.
-#'
+#' This is a thin wrapper around [lm()] followed by [ToSimplex()], which
+#' allows to create a lmCoDa object in one step.
 #'
 #' @param formula as in [lm()]
 #' @param data as in [lm()]
 #' @param ... arguments passed on to [lm()]
+#' @return an object of class "lm" and "lmCoDa" if the formula include at least
+#'   one log-transformation
 #'
 #' @author Lukas Dargel
-#' @seealso [lm()], [ToSimplex()]
+#' @seealso [lm()], [ToSimplex()], [compositions::ilr()], [compositions::alr()]
 #' @export
 #' @examples
 #'
-#' aa
+#' # XY-compositional model
+#' res <- lmCoDa(
+#'   ilr(cbind(left, right, extreme_right)) ~
+#'   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)),
+#'   data =  head(election, 20))
+#'
+#' # X-compositional model
+#' res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields, 20))
+#'
 lmCoDa <- function(formula, data, ...) {
-  res <- lm(formula, data, ...)
-  res <- ToSimplex(res)
-  return(res)
+  cl <- match.call()
+  cl[[1]] <- as.symbol("lm")
+  res <- eval(cl)
+  cl[[1]] <- as.symbol("lmCoDa")
+  res$call <- cl
+  return(ToSimplex(res))
 }
 
 
-#' Converting Linear models to a CoDa models
+#' Converting Linear Models to CoDa models
 #'
 #' @description
-#' The function converts the output of a [lm()] to the lmCoDa class, which
+#' The function converts the output of a "lm" to the "lmCoDa" class, which
 #' offers additional tools for the interpretation of a CoDa regression models.
+#' Most of the work is done by the [transformationSummary()] function, which
+#' has its own documentation page, but should be reserved for internal use.
+#'
 #'
 #' @inherit lmCoDa return examples
 #' @seealso [lm()], [lmCoDa()]
@@ -41,26 +50,32 @@ lmCoDa <- function(formula, data, ...) {
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
 #' @export
+#' @examples
+#'
+#' # XY-compositional model
+#' res <- lm(
+#'   ilr(cbind(left, right, extreme_right)) ~
+#'   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)),
+#'   data =  head(election, 20))
+#' res <- ToSimplex(res)
+#'
+#' # X-compositional model
+#' res <- lm(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields, 20))
+#' res <- ToSimplex(res)
 ToSimplex <- function(object){
 
   trSry <- transformationSummary(object)
   if (all(trSry[,'LR_TRAN'] == ""))
     return(object)
 
-
   object$trSry <- trSry
-  y_trans <- trSry[1,'LR_TRAN']
-  if (y_trans != "") {
-    invTran <- match.fun(paste0(y_trans,"Inv"))
-    attributes(object$fitted.values)$orig <- invTran(object$fitted.values)
-    attributes(object$residuals)$orig     <- invTran(object$residuals)
+  class(object) <- c('lmCoDa', class(object))
+  if (trSry[1,'LR_TRAN'] == "")
+    return(object)
 
-    meanImpacts <- t(Reduce(f = "rbind", trSry$COEF_CLR[-1]))
-    meanImpacts <- as(attributes(object$fitted.values)$orig, "matrix") %*% meanImpacts
-    object$meanImpacts <- meanImpacts
-  }
-
-  class(object) <- c(class(object),'lmCoDa')
+  invTran <- match.fun(paste0(trSry[1,'LR_TRAN'],"Inv"))
+  attributes(object$fitted.values)$orig <- invTran(object$fitted.values)
+  attributes(object$residuals)$orig     <- invTran(object$residuals)
   return(object)
 }
 
@@ -72,17 +87,18 @@ ToSimplex <- function(object){
 #' They additionally offer the possibility use the `space` argument
 #' which transforms them into directly into clr space or in the simplex.
 #'
-#' @param object of type `lmSimplex`
+#' @param object class "lmCoDa"
 #' @param space a character indicating in which space the prediction should
 #'   be returned. Supported are the options `c("clr", "simplex")`.
 #' @param ... passed on to [`predict.lm()]
-#' @export
+#' @author Lukas Dargel
+#' @exportS3Method
 predict.lmCoDa <- function(object, space = NULL, ...) {
 
   stopifnot(is.null(space) || space %in% c("clr", "simplex"))
-  pred <- predict(object, ...)
+  pred <- NextMethod("predict")
   if (is.null(space))
-    return(Pred)
+    return(pred)
 
   Ky <- object$trSry[["LR_BASE_K"]][[1]]
   if (length(Ky) == 0)
@@ -96,14 +112,13 @@ predict.lmCoDa <- function(object, space = NULL, ...) {
 }
 
 #' @inherit predict.lmCoDa title description details params
-#' @param ... not used
 #' @return matrix or vector
-#' @importFrom compositions clrInv
-#' @export
-residuals.lmCoDa <- function(object, space, ...) {
+#' @author Lukas Dargel
+#' @exportS3Method
+residuals.lmCoDa <- function(object, space = NULL) {
 
   stopifnot(is.null(space) || space %in% c("clr", "simplex"))
-  resi <- resid(object)
+  resi <- object$residuals
   if (is.null(space))
     return(resi)
 
@@ -120,14 +135,13 @@ residuals.lmCoDa <- function(object, space, ...) {
 
 
 #' @inherit predict.lmCoDa title description details params
-#' @param ... not used
 #' @return matrix or vector
-#' @importFrom compositions clrInv
-#' @export
-fitted.lmCoDa <- function(object, space, ...) {
+#' @author Lukas Dargel
+#' @exportS3Method
+fitted.lmCoDa <- function(object, space = NULL) {
 
   stopifnot(is.null(space) || space %in% c("clr", "simplex"))
-  fity <- fitted(object)
+  fity <- object$fitted.values
   if (is.null(space))
     return(fity)
 
@@ -145,10 +159,17 @@ fitted.lmCoDa <- function(object, space, ...) {
 
 
 #' @inherit predict.lmCoDa title description details params
+#' @param separate logical, if `TRUE` the coefficients are reported as a list instead
+#'   of a matrix, where list structure reflects the explanatory variables of the model
 #' @param ... not used
 #' @return a matrix
-#' @importFrom compositions clrInv
-#' @export
-coef.lmCoDa <- function(object, space, ...) {
-
+#'
+#' @author Lukas Dargel
+#' @exportS3Method
+coef.lmCoDa <- function(object, space = NULL, separate = FALSE, ...) {
+  stopifnot(is.null(space) || space %in% c("clr", "simplex"))
+  type <- if (is.null(space)) "COEF_COORD" else c("clr" = "COEF_CLR", "simplex" = "COEF_SIMPLEX")[space]
+  cfs <- object$trSry[[type]][-1]
+  cfs <- if (separate) cfs else Reduce("rbind", cfs)
+  return(cfs)
 }
