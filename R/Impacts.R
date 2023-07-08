@@ -22,7 +22,7 @@
 #' @author
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
-#' @export
+#' @exportS3Method
 # TODO refs
 #' @references "
 #'   - Dargel & T-A (2023)
@@ -31,10 +31,10 @@
 #' @examples
 #'
 #' aa
-Impacts <- function(object, Xvar=NULL, obs=1){
+Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1){
 
-  stopifnot(is.character(Xvar) && length(Xvar) == 1,
-            is.numeric(obs) && length(obs) == 1)
+  stopifnot(is.character(Xvar) || length(Xvar) == 1,  # IDEA allow multiple variable
+            is.numeric(obs) && isTRUE(obs >= 1) && obs <= nobs(object))
 
   trSry <- transformationSummary(object)
   Anames <- unlist(trSry$NAME_SIMPLEX)
@@ -43,16 +43,26 @@ Impacts <- function(object, Xvar=NULL, obs=1){
   Xvar <- which(Xvar == Anames)
   Xcoef <- trSry$COEF_CLR[[Xvar]]
 
-  YX_is_compo <- unlist("" != trSry$LR_TRAN[c(1, Xvar)], use.names = FALSE)
+  YX_is_compo <- c("" != trSry$LR_TRAN[c(1, Xvar)], use.names = FALSE)
   if (identical(YX_is_compo, c(FALSE, FALSE)))
-    stop("Impacts are not meaningful when Y and X are both not compositional!")
+    stop("Impacts are only meaningful if X or Y are compositional!")
 
   if (identical(YX_is_compo, c(FALSE, TRUE)))
     return(Xcoef)
 
-  if (identical(YX_is_compo, c(TRUE, FALSE)))
-    return(Xcoef + object$meanImpact[obs, Xvar])
-
-  if (identical(YX_is_compo, c(TRUE, TRUE)))
-    return(Xcoef + t(object$meanImpact[rep(obs,ncol(Xcoef)), rownames(Xvar)]))
+  # when Y is compositional
+  Dy <- trSry$D[[1]]
+  Wz <- diag(Dy) - as(fitted(object, space = "simplex")[rep(obs,Dy), ], "matrix")
+  imp <- Xcoef %*% t(Wz)
+  colnames(imp) <- colnames(Xcoef)
+  attr(imp, "obs") <- obs
+  return(imp)
 }
+
+#' @keywords internal
+#' @noRd
+Impacts <- function(x, ...) {
+  UseMethod("Impacts")
+}
+
+
