@@ -1,4 +1,4 @@
-#' @title Confidence Intervals for CoDa Model Parameters and differences
+#' @title Confidence Intervals for CoDa Models
 #'
 #' @description
 #' Dargel and Thomas-Agnan (2023) show to compute variances and confidence
@@ -10,11 +10,16 @@
 #' Another option is interpret the difference in clr parameters as these
 #' coincide with the difference in elasticities.
 #'
+#'
+#' @details
 #' Since CoDa models are often multivariate this function only allows to
 #' specify one explanatory variable at a time.
-#' The return value is also more complicated than in [confint.default()].
+#' The output is also more complex than the usual one for "lm" classes, because
+#' we have to indicate the component of Y and X.
+#' With [confint.lm()] it is still possible to compute the usual the confidence
+#' intervals.
 #'
-#' @inheritParams predict.lmCoDa
+#' @param object class "lmCoDa"
 #' @param parm a character, indicating the name of one explanatory variable
 #' @param level a numeric, indicating the confidence level required
 #' @param y_ref an optional argument that indicates the reference component of
@@ -22,37 +27,78 @@
 #'   This argument is only used in the Y-compositional model.
 #'   If it is supplied confidence intervals of difference are used instead of
 #'   the direct intervals of the parameters.
-#' @param ...
+#' @param obs an optional integer that indicates one observation
+#'   when this argument is supplied the function return the observation
+#'   dependent elasticity
 #' @return data.frame
-#' @export
+#'
 #' @author Lukas Dargel
-# TODO refs
 #' @references
 #'
-confint.lmCoDa <- function(object, parm, level = .95, y_ref = NULL, ...) {
+#' @exportS3Method
+#' @examples
+#'
+#' ## ==== Y-compositional model ====
+#' res <- lmCoDa(
+#'   ilr(cbind(left, right, extreme_right)) ~
+#'   ilr(cbind(Age_1839, Age_4064)) +
+#'   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
+#'   unemp_rate,
+#'   data = head(election, 20))
+#'
+#' ## ---- CI for scalar X
+#' # CI for clr parameters
+#' confint(res, "unemp_rate")
+#' # CI for difference in clr parameters (coincides with difference in the semi elasticity)
+#' confint(res, "unemp_rate", y_ref = 1)
+#' # CI for the observation dependent elasticity
+#' confint(res, "unemp_rate", obs = 1)
+#'
+#' ## ---- CI for compositional X
+#' # CI for clr parameters
+#' confint(res, "cbind(Age_1839, Age_4064)")
+#' # CI for difference in clr parameters (coincides with difference in the elasticity)
+#' confint(res, "cbind(Age_1839, Age_4064)", y_ref = 1)
+#' # CI for the observation dependent elasticity
+#' confint(res, "cbind(Age_1839, Age_4064)", obs = 1)
+confint.lmCoDa <- function(
+    object,
+    parm,
+    level = .95,
+    y_ref = NULL,
+    obs = NULL) {
 
-  stopifnot(level > 0.5 & level < 1,
-            is.character(parm) & length(parm) == 1,
-            is.null(y_ref) | length(y_ref) == 1)
+  stopifnot(level > 0 && level < 1,
+            is.character(parm) && length(parm) == 1,
+            is.null(y_ref) || length(y_ref) == 1)
 
-  tranSumary <- transformationSummary(object)
-  x_vars <- rownames(tranSumary)[-1]
-  if (!parm %in% x_vars) stop("parm must be one of ", deparse(x_vars))
-  if (all(0 == c(tranSumary$D[[1]], tranSumary$D[[parm]]))) return(NULL)
+  trSry <- object$trSry
+  Xnames <- c(object$trSry$NAME_SIMPLEX[-1],use.names = FALSE)
+  if (!parm %in% Xnames) stop("parm must be one of ", list(Xnames))
+  Xpos <- c(which(parm == object$trSry$NAME_SIMPLEX),use.names = FALSE)
 
-  est_coef <- t(tranSumary[["COEF_CLR"]][[parm]])
-  vcov_x <- tranSumary[["VARCOV_CLR"]][[parm]]
-  vcov_y <- tranSumary[["VARCOV_CLR"]][[1]]
+  if (all(0 == c(trSry$D[[1]], trSry$D[[Xpos]])))
+    return(confint.lm(object, rownames(trSry)[Xpos], level))
+
+  est_coef <- t(trSry[["COEF_CLR"]][[Xpos]])
+  vcov_x <- trSry[["VARCOV_CLR"]][[Xpos]]
+  vcov_y <- trSry[["VARCOV_CLR"]][[1]]
   y_vars <- colnames(vcov_y)
-  if (ncol(vcov_y) < 2) y_ref <- NULL
 
   df_eq <- nobs(object) - ncol(t(coef(object)))
   a <- (1 - level)/2
   a <- c(a, 1 - a)
   qlevel <- qt(a, df_eq)
+  pct <- function(x) stats:::format.perc(x, 10)
 
-  marginal_intervals <- is.null(y_ref)
-  if (marginal_intervals) {
+
+  # 3 cases
+  if (ncol(vcov_y) < 2) y_ref <- obs <- NULL # when scalar y we only need clr
+  clr_intervals <- is.null(y_ref) & is.null(obs)
+  diff_intervals <- !is.null(y_ref)
+  elast_intervals <- !is.null(obs)
+
+  if (clr_intervals) {
     sd_coef <- lapply(sqrt(diag(vcov_x)), "*", sqrt(diag(vcov_y)))
     sd_coef <- t(t(do.call("cbind", sd_coef)))
 
@@ -67,16 +113,14 @@ confint.lmCoDa <- function(object, parm, level = .95, y_ref = NULL, ...) {
         "qHi" = sd_coef[,i] * qlevel[2] + est_coef[,i],row.names = NULL)
     }
     result <- Reduce("rbind", result)
-    colnames(result) <- c("Y","X","EST","SD", paste0("Q", substr(a,start = 3, 10)))
+    colnames(result) <- c("Y","X","EST","SD", pct(a))
+    attr(result, "type") <- "CI for clr coeffiecients"
     return(result)
   }
 
-  diff_intervals <- !is.null(y_ref)
   if (diff_intervals) {
     if (is.character(y_ref)) y_ref <- which(y_ref == y_vars)
     if (!any(y_ref %in% seq_len(ncol(vcov_y)))) stop("y_ref is not identifyable!")
-
-
     diff_coef <- est_coef - est_coef[rep(y_ref,length(y_vars)), ]
     sd_dy <- sqrt(diag(vcov_y) + vcov_y[y_ref,y_ref] - 2*vcov_y[y_ref,])
 
@@ -94,7 +138,35 @@ confint.lmCoDa <- function(object, parm, level = .95, y_ref = NULL, ...) {
         "qHi" = sd_dcoef * qlevel[2] + diff_coef[,i],row.names = NULL)
     }
     result <- Reduce("rbind", result)
-    colnames(result) <- c("Y_ref","Y","X","DIFF","SD", paste0("Q", substr(a,start = 3, 10)))
+    colnames(result) <- c("Y_ref","Y","X","DIFF","SD", pct(a))
+    attr(result, "type") <- "CI for differences in impacts"
+    return(result)
+  }
+
+
+  if (elast_intervals) {
+    Y0 <- as(fitted(object, "simplex")[obs,], "matrix")
+    Dy <- length(Y0)
+    Wz <- diag(Dy) - Y0[rep(1,Dy),]
+
+    est_elast <- Wz %*% est_coef
+    vcov_elast <- Wz %*% vcov_y %*% t(Wz)
+    sd_elasti <- lapply(sqrt(diag(vcov_x)), "*", sqrt(diag(vcov_elast)))
+    sd_elasti <- t(t(do.call("cbind", sd_elasti)))
+
+    result <- vector("list", length = ncol(est_elast))
+    for (i in seq_along(result)) {
+      result[[i]] <- data.frame(
+        "Y"   = colnames(vcov_y),
+        "X"   = colnames(est_coef)[i],
+        "est" = est_elast[,i],
+        "sd"  = sd_elasti[,i],
+        "qLo" = sd_elasti[,i] * qlevel[1] + est_elast[,i],
+        "qHi" = sd_elasti[,i] * qlevel[2] + est_elast[,i],row.names = NULL)
+    }
+    result <- Reduce("rbind", result)
+    colnames(result) <- c("Y","X","IMPACT","SD", pct(a))
+    attr(result, "type") <- "CI for observation dependent impacts"
     return(result)
   }
 }

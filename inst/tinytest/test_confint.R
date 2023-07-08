@@ -1,18 +1,18 @@
 library("compositions")
 
-# ---- confint.clr (univariate) -----------------------------------------------
+# ---- confint (univariate) ---------------------------------------------------
 # Y-compositional
-res <- lm(
+res <- lmCoDa(
   ilr(cbind(left, right, extreme_right)) ~
     ilr(cbind(Age_1839, Age_4064)) +
     ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
     unemp_rate,
   data = election[1:20,])
-expect_true(is.data.frame(confint.clr(res, "unemp_rate")))
-expect_true(is.data.frame(confint.clr(res, "ilr(cbind(Age_1839, Age_4064))")))
-expect_true(is.data.frame(confint.clr(res, "ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher))")))
+expect_true(is.data.frame(confint(res, "unemp_rate")))
+expect_true(is.data.frame(confint(res, "cbind(Age_1839, Age_4064)")))
+expect_true(is.data.frame(confint(res, "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)")))
 
-res2 <- confint.clr(res, "ilr(cbind(Age_1839, Age_4064))")
+res2 <- confint(res, "cbind(Age_1839, Age_4064)")
 expect_true(all(res2$EST > res2$Q025) && all(res2$EST < res2$Q975))
 expect_equal(
   res2[,c("Y","X")],
@@ -22,33 +22,54 @@ expect_equal(
 rm(res, res2)
 
 # Y-scalar
-res <- lm(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = rice_yields[1:20,])
-expect_true(is.null(confint.clr(res, "PRECIPITATION")))
-expect_true(is.data.frame(confint.clr(res, "ilr(TEMPERATURES)")))
-expect_equal(confint.clr(res, "ilr(TEMPERATURES)"),
-             confint.clr(res, "ilr(TEMPERATURES)",y_ref = 3))
+res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = rice_yields[1:20,])
+expect_true(is.data.frame(confint(res, "TEMPERATURES")))
+expect_equal(confint(res, "TEMPERATURES"),
+             confint(res, "TEMPERATURES",y_ref = 3))
 rm(res)
 
-# ---- confint.clr (differences) ----------------------------------------------
+# ---- confint (differences) --------------------------------------------------
 expect_true({
-  res <- confint.clr(lm(
+  res <- confint(lmCoDa(
     ilr(cbind(left, right, extreme_right)) ~
       ilr(cbind(Age_1839, Age_4064)) +
       ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
       unemp_rate, data = election[1:20,]),
-    x_var_name = "ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher))",
+    parm = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)",
     y_ref = 1)
-  all(res[res$Y_ref == res$Y, c("DIFF", "SD", "Q025", "Q975")] == 0)
+  all(res[res$Y_ref == res$Y, c("DIFF", "SD", "2.5 %", "97.5 %")] == 0)
 },info = "Y compo - X comp")
 
 
 expect_true({
-  res <- confint.clr(lm(
+  res <- confint(lmCoDa(
     ilr(cbind(left, right, extreme_right)) ~
       ilr(cbind(Age_1839, Age_4064)) +
       ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
       unemp_rate, data = election[1:20,]),
-    x_var_name = "unemp_rate",
+    parm = "unemp_rate",
     y_ref = 1)
-  all(res[res$Y_ref == res$Y, c("DIFF", "SD", "Q025", "Q975")] == 0)
+  all(res[res$Y_ref == res$Y, c("DIFF", "SD", "2.5 %", "97.5 %")] == 0)
 },info = "Y compo - X scalar")
+
+# ---- confint (elasticity) ---------------------------------------------------
+# Y compo
+res <- lmCoDa(
+  ilr(cbind(left, right, extreme_right)) ~
+    ilr(cbind(Age_1839, Age_4064)) +
+    ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
+    unemp_rate, data = election[1:20,])
+
+expect_equivalent({
+  ci <- confint(res,parm = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", obs = 1)
+  sum(ci$IMPACT)}, 0, info = "Y compo - X compo")
+
+expect_equivalent({
+  ci <- confint(res,parm = "unemp_rate", obs = 10)
+  sum(ci$IMPACT)}, 0, info = "Y compo - X scalar")
+
+# Y scalar
+res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields, 20))
+expect_equal(
+  confint(res,parm = "TEMPERATURES", obs = 10),
+  confint(res,parm = "TEMPERATURES"))
