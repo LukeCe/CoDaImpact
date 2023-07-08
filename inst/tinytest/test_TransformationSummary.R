@@ -68,7 +68,7 @@ expect_equal({
       lr3(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
       log(unemp_rate),
     data = tt))
-  res[,c("COEF_SIMPLEX","COEF_CLR")]
+  res$COEF_CLR
 },
 {
   V <- ilrBase(D = 3)
@@ -80,8 +80,8 @@ expect_equal({
     lr1(cbind(left, right, extreme_right)) ~
       lr2(cbind(Age_1839, Age_4064)) +
       lr3(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
-      unemp_rate, data = tt))
-  res[,c("COEF_SIMPLEX","COEF_CLR")]
+      log(unemp_rate), data = tt))
+  res$COEF_CLR
 },info = "Three diffrent ilr bases in X and Y")
 
 expect_equal({

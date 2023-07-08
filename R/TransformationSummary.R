@@ -1,15 +1,22 @@
-#' Summarize the transformations in a CoDa model
+#' Summarize the transformations in a CoDa model (internal)
 #'
+#' @description
 #' Extract from a CoDa model estimated by `lm()` all information related to the
 #' log-ratio transformations of the variables and the parameters.
 #'
-#' The structure of the object resembles a data.frame, where rows correspond
-#' to the variables and columns to different information sets related to the
-#' transformations involved with each variable.
+#' @details
+#' The structure of the return value resembles a data.frame where most columns
+#' are lists instead of vectors.
+#' The rows in this data.frame correspond to the variables used for fitting
+#' the model.
+#' The columns store information on the log-ratio transformations and their
+#' associated bases (K and F).
+#' Additionally the clr parameters and the covariance matrices are retained.
 #'
+#' @param lm_res class "lm"
+#' @return data.frame, with list columns
 #' @importFrom compositions clrInv
 #' @author Lukas Dargel
-#' @noRd
 #' @keywords internal
 transformationSummary <- function(lm_res) {
 
@@ -44,8 +51,10 @@ transformationSummary <- function(lm_res) {
   Ky <- trans_Y[["base_K"]] # K and F are both V in the case of ilr
   Fy <- trans_Y[["base_F"]]
 
-  cov_Yclr <- cov_Y <- crossprod(resid(lm_res))/(nobs(lm_res) - nrow(coef_mat))
-  if (length(Fy) > 0) cov_Yclr <- t(Fy) %*% cov_Y %*% t(Ky) else dimnames(cov_Yclr) <- list(names(mod)[1])[c(1,1)]
+  cov_Y <- crossprod(resid(lm_res))/(nobs(lm_res) - nrow(coef_mat))
+  colnames(cov_Y) <- rownames(cov_Y) <- if (length(Ky) == 0) names(mod)[1] else colnames(Ky)
+  cov_Yclr <- if (length(Fy) == 0) cov_Y else t(Fy) %*% cov_Y %*% t(Ky)
+
 
   result$"NAME_COORD"[[1]]   <- names(mod)[1]
   result$"NAME_SIMPLEX"[[1]] <- name_invTrans(names(mod)[1], trans_Y[["name"]])
@@ -62,6 +71,7 @@ transformationSummary <- function(lm_res) {
   cov_X <- qr.R(lm_res[["qr"]])
   cov_X <- chol2inv(cov_X)
   dimnames(cov_X) <- list(rownames(coef_mat))[c(1,1)]
+  colnames(coef_mat) <- colnames(cov_Y)
   i_coef <- 0
   for (i in seq_along(mod)[-1]) {
 
