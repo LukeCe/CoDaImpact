@@ -19,7 +19,6 @@
 #'   - (when Xvar refers to a scalar variable this argument is ignored)
 #' @param obs a numeric indicating the observation used for the scenario
 #' @param inc_size a numeric indicating the distance between each point in the scenario of X
-#' @param inc_rate a numeric that can be used as an parametrization of the step size
 #' @param n_steps a numeric indicating the number of points in the scenario
 #' @param add_opposite a logical, if `TRUE` the scenario also includes changes in the opposite direction
 #'
@@ -28,7 +27,6 @@
 # TODO update reference
 #' @references "full citation of Dargel and Thomas-Agnan (2023)"
 #' @export
-#'
 #' @examples
 #'
 #' # ---- model with scalar response ----
@@ -52,59 +50,62 @@ VariationScenario <- function(
     Xdir,
     obs = 1,
     inc_size = .1,
-    inc_rate,
     n_steps = 100,
     add_opposite = TRUE) {
 
   stopifnot(is(object, "lmCoDa"),
             is.character(Xvar) && length(Xvar) == 1,
-            length(obs) == 1,
+            missing(Xdir) || is.character(Xdir) || is.numeric(Xdir),
+            is.numeric(obs) && isTRUE(obs >= 1) && obs <= nobs(object),
             is.numeric(inc_size) && length(inc_size) == 1,
-            missing(inc_rate) || (0 < inc_rate && inc_rate < 1),
             is.numeric(n_steps) && length(n_steps) == 1,
             isTRUE(add_opposite) || isFALSE(add_opposite))
 
   clo2 <- function(x) x/rowSums(x)
-  traSry <- transformationSummary(object)
+  trSry <- object$trSry
 
   # get X0
-  Anames <- unlist(traSry$NAME_SIMPLEX)
+  Anames <- unlist(trSry$NAME_SIMPLEX)
   Xnames <- setdiff(Anames[-1], "(Intercept)")
   if (!Xvar %in% Xnames) stop("Xvar musst be one of ", list(Xnames), "!")
-  Xvar <- unlist(traSry$NAME_COORD[Xvar == Anames])
-  Dx <- traSry$D[[Xvar]]
+  Xvar <- unlist(trSry$NAME_COORD[Xvar == Anames])
+  Dx <- trSry$D[[Xvar]]
   scalar_x <- Dx == 0
-  Kx <- traSry$LR_BASE_K[[Xvar]]
+  Kx <- trSry$LR_BASE_K[[Xvar]]
   X0 <- object$model[[Xvar]]
   X0 <- if (scalar_x) X0[obs] else t(X0[obs,]) %*% t(Kx) # work with clr in compositional case
 
   # get Y0
-  scalar_y <- traSry$D[[1]] == 0
-  Ky <- traSry$LR_BASE_K[[1]]
+  scalar_y <- trSry$D[[1]] == 0
+  Ky <- trSry$LR_BASE_K[[1]]
   Y0 <- fitted(object)
   Y0 <- if (scalar_y) Y0[obs] else Y0[obs,] %*% t(Ky) # work with clr in compositional case
 
   inc_seq <- seq(from = -n_steps*add_opposite, to = n_steps)
   if (scalar_x) {
     # IDEA allow for "log-linear" sequences
-    Xcoef <- traSry$COEF_CLR[[Xvar]]
+    Xcoef <- trSry$COEF_CLR[[Xvar]]
     Xscenario <- inc_seq*inc_size
-    Yscenario <- if (scalar_y) Y0 else Y0[rep(1,nrow(Xscenario)),,drop=FALSE]
+    Yscenario <- if (scalar_y) Y0 else Y0[rep(1,length(Xscenario)),,drop=FALSE]
     Yscenario <- Xscenario %*% Xcoef + Yscenario
     Xscenario <- X0 + Xscenario
   }
 
   if (!scalar_x) {
+    # define the unit direction
     if (is.character(Xdir)) {
-      # convert preferential to general direction
-      Xdir <- Xdir == colnames(X0)
-      Xdir <- if (sum(Xdir) == 1) exp(Xdir) else stop("Xdir must be one of ", list(colnames(X0)), "!")
-      if (!missing(inc_rate)) inc_size <- inc_rate * Xdir && stop("To be corrected")
+      Xvertex <- Xdir == colnames(X0)
+      if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(colnames(X0)), "!")
+      Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
+      Xdir <- Xdir/sum(Xdir)
+    } else {
+      valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
+      if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
+      Xdir <- ilr(Xdir)
+      Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
     }
-    valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
-    if (!valid_dir) stop("Xdir must be a positive vector of length ", length(X0), "!")
 
-    Xcoef <- traSry$COEF_CLR[[Xvar]]
+    Xcoef <- trSry$COEF_CLR[[Xvar]]
     Xscenario <- CoDa_path(rep(1/Dx, Dx), comp_direc = Xdir, step_size = inc_size, n_steps = n_steps, add_opposite = add_opposite)
     Xscenario <- log(as.matrix(Xscenario)) %*% clrBase(Dx)
     Yscenario <- if (scalar_y) Y0 else Y0[rep(1,nrow(Xscenario)),]
@@ -113,7 +114,7 @@ VariationScenario <- function(
   }
 
   if (!scalar_x) Xvar <- "X"
-  if (!scalar_y) Yvar <- "Y" else Yvar <- rownames(traSry)[1]
+  if (!scalar_y) Yvar <- "Y" else Yvar <- rownames(trSry)[1]
   if (!scalar_y) Yscenario <- clo2(exp(Yscenario))
   result <- data.frame(row.names = as.character(inc_seq))
   result[[Yvar]] <- Yscenario

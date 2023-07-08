@@ -35,11 +35,12 @@ res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields
 
 # compositional X
 resX <- VariationTable(res, Xvar = "TEMPERATURES", Xdir = "HIGH")
+expect_true(colnames(resX) == "YIELD")
 expect_true("semi elasticity" %in% tolower(rownames(resX)))
 expect_true(sum(attr(resX, "X(0)")) == 1)
 expect_true(sum(attr(resX, "Xdir")) == 1)
 expect_true(resX["Initial value",] == res$fitted.values[[1]])
-expect_equivalent(sum(resX["Variation in % points",]),0)
+expect_true(isTRUE(abs(resX["Variation in units",]) > 0))
 rm(resX)
 
 

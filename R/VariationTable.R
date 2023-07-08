@@ -1,17 +1,43 @@
-#' @title Tabulate effects of infinitesimal changes in CoDa models
+#' @title Effects of infinitesimal changes in CoDa models
 #'
 #' @description
-#' Compute variations
+#' This function allows to evaluate how a change in an explanatory variables
+#' impacts the response variable in a CoDa regression model.
+#' The changes are calculated based from the approximate formal presented
+#' in Dargel and Thomas-Agnan (2023).
+#' Changes in the response variables are provided as data.frame and the
+#' underlying changes in the explanatory variable are given as attributes.
 #'
 #' @details
 #' Developed in Dargel and Thomas-Agnan (2023)
 #'
 #' @inheritParams VariationScenario
+#' @param inc_rate a numeric that can be used as an parametrization of the step size
 #' @param Ytotal a numeric indicating the total of Y
 #' @return data.frame
-#' @export
 #'
+#' @author
+#'   - Lukas Dargel
+#'   - Rodrigue Nasr
+#' @references
+#' @export
 #' @examples
+#'
+#' # XY-compositional model
+#' res <- lmCoDa(
+#'   ilr(cbind(left, right, extreme_right)) ~
+#'   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)),
+#'   data =  head(election, 20))
+#'
+#' # Variation of age the education composition towards a summit ...
+#' # (higher share of people with lower education)
+#' VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = "Educ_BeforeHighschool")
+#'
+#' # The same changes using a compositional vector as direction
+#' VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.5,.25,.25))
+#'
+#' # Changes in a more general direction and for a diffrent observation
+#' VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.35,.45,.10), obs = 2)
 VariationTable <- function(
     object,
     Xvar,
@@ -24,14 +50,13 @@ VariationTable <- function(
   stopifnot(is(object, "lmCoDa"),
             is.character(Xvar) && length(Xvar) == 1,
             missing(Xdir) || is.character(Xdir) || is.numeric(Xdir),
-            length(obs) == 1,
+            is.numeric(obs) && isTRUE(obs >= 1) && obs <= nobs(object),
             is.numeric(inc_size) && length(inc_size) == 1,
             is.null(inc_rate) || (0 < inc_rate && inc_rate < 1),
             is.numeric(Ytotal) && length(Ytotal) == 1)
 
-  clo2 <- function(x) x/sum(x)
   trSry <- object$trSry
-  if (all(trSry$LR_TRAN[c(1, Xvar)] == "")) stop("Variations are only meaningful if X or Y are compositional!")
+  if (all(trSry$LR_TRAN[c(1, Xvar)] == "")) stop("Variation tables are only meaningful if X or Y are compositional!")
 
   # get X0
   Anames <- unlist(trSry$NAME_SIMPLEX)
@@ -45,19 +70,18 @@ VariationTable <- function(
 
   # get Y0
   scalar_y <- trSry$D[[1]] == 0
-  Y0 <- if (scalar_y) fitted(object)[obs] else fitted(object, space = "simplex")[obs,]
-  Y0 <- as(Y0, "vector")
-
+  Y0 <- if (scalar_y) structure(fitted(object)[obs], names = names(object$model)[1]) else as(fitted(object, space = "simplex")[obs,],"vector")
 
   # define elasticities
   elasti <- Impacts(object, trSry$NAME_SIMPLEX[[Xvar]], obs)
+
   if (!scalar_x) {
     # for compositional X we need to account for the in which X changes
     if (is.character(Xdir)) {
       Xvertex <- Xdir == names(X0)
       if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(names(X0)), "!")
-
-      Xdir <- clo2(exp(Xvertex)^sqrt(Dx/(Dx-1)))
+      Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
+      Xdir <- Xdir/sum(Xdir)
       if (!is.null(inc_rate)) inc_size <- inc_rate * log(Xdir)[Xvertex]
     } else {
       valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
@@ -69,6 +93,8 @@ VariationTable <- function(
     inc_rate <- as(log(Xdir)*inc_size, "vector")
     elasti   <- log(Xdir) %*% elasti
   }
+
+
 
   Ytotal <- if (scalar_y) 1 else Ytotal
   Y1  <- Y0 * (1 + elasti * inc_size)
