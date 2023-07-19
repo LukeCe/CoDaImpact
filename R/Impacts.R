@@ -22,15 +22,16 @@
 #' @author
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
-#' @exportS3Method
+#' @export
 # TODO refs
 #' @references "
 #'   - Dargel & T-A (2023)
 #'   - Morais & T-A (2021)
 #'
 #' @examples
+#' res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
+#' Impacts(res, Xvar = "TEMPERATURES")
 #'
-#' aa
 Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1){
 
   stopifnot(is.character(Xvar) || length(Xvar) == 1,  # IDEA allow multiple variable
@@ -59,7 +60,7 @@ Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1){
   return(imp)
 }
 
-#' @keywords internal
+#' @export
 #' @noRd
 Impacts <- function(x, ...) {
   UseMethod("Impacts")

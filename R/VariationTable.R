@@ -19,7 +19,7 @@
 #' @author
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
-#' @references
+# TODO @references
 #' @export
 #' @examples
 #'

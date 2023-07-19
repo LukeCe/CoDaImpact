@@ -30,17 +30,17 @@
 #' @examples
 #'
 #' # ---- model with scalar response ----
-#' res <- lm(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
+#' res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
 #' VariationScenario(res, Xvar = "TEMPERATURES", Xdir = "MIDDLE", n_steps = 5)
-#' VariationScenario(res, Xvar = "PRECIPITATION", n_steps = 5))
+#' VariationScenario(res, Xvar = "PRECIPITATION", n_steps = 5)
 #'
 #'
 #' # ---- model with compositional response ----
-#' res <- lm(ilr(cbind(left, right, extreme_right)) ~
-#'             ilr(cbind(Age_1839, Age_4064)) +
-#'             ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
-#'             log(unemp_rate),
-#'           data = head(election))
+#' res <- lmCoDa(ilr(cbind(left, right, extreme_right)) ~
+#'                 ilr(cbind(Age_1839, Age_4064)) +
+#'                 ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
+#'                 log(unemp_rate),
+#'               data = head(election))
 #'
 #' VariationScenario(res, "cbind(Age_1839,Age_4064)",Xdir = "Age_1839", n_steps = 5)
 #' VariationScenario(res, "log(unemp_rate)", n_steps = 5)
