@@ -77,24 +77,25 @@ VariationTable <- function(
 
   if (!scalar_x) {
     # for compositional X we need to account for the in which X changes
-    if (is.character(Xdir)) {
+    vertex_dir <- is.character(Xdir)
+    if (vertex_dir) {
       Xvertex <- Xdir == names(X0)
       if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(names(X0)), "!")
       Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
       Xdir <- Xdir/sum(Xdir)
-      if (!is.null(inc_rate)) inc_size <- inc_rate * log(Xdir)[Xvertex]
-    } else {
+      if (!is.null(inc_rate)) inc_size <- inc_rate * sqrt((Dx-1)/Dx) / (1 - X0[Xvertex])
+      if (is.null(inc_rate))  inc_rate <- inc_size * sqrt(Dx/(Dx-1)) * (1 - X0[Xvertex])
+    }
+    if (!vertex_dir) {
       valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
       if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
 
       Xdir <- ilr(Xdir)
       Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
+      inc_rate <- NULL
     }
-    inc_rate <- as(log(Xdir)*inc_size, "vector")
     elasti   <- log(Xdir) %*% elasti
   }
-
-
 
   Ytotal <- if (scalar_y) 1 else Ytotal
   Y1  <- Y0 * (1 + elasti * inc_size)
@@ -110,10 +111,11 @@ VariationTable <- function(
   evalString <- function(s) eval(str2lang(s), environment())
   explanation <- explanation[!is.null(explanation)]
   result <- lapply(names(explanation), evalString)
-  result <- data.frame(Reduce("rbind", result), row.names = explanation)
+  result <- data.frame(Reduce("rbind", result), row.names = explanation, check.names = FALSE)
 
   if (scalar_x) Xdir <- inc_rate <- NULL
   attr(result,'X(0)')     <- X0
+  attr(result,'X(h)')     <- if (scalar_x) X0 + inc_size else X0 * (1 + inc_size * (log(Xdir) - sum(X0 * log(Xdir))))
   attr(result,'Xdir')     <- Xdir
   attr(result,'inc_size') <- inc_size
   attr(result,'inc_rate') <- inc_rate
