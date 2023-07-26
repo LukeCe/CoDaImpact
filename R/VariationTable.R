@@ -115,7 +115,7 @@ VariationTable <- function(
 
   if (scalar_x) Xdir <- inc_rate <- NULL
   attr(result,'X(0)')     <- X0
-  attr(result,'X(h)')     <- if (scalar_x) X0 + inc_size else X0 * (1 + inc_size * (log(Xdir) - sum(X0 * log(Xdir))))
+  attr(result,'X(h)')     <- if (scalar_x) X0 + inc_size else as(X0, "vector") * (1 + inc_size * (log(Xdir) - sum(X0 * log(Xdir))))
   attr(result,'Xdir')     <- Xdir
   attr(result,'inc_size') <- inc_size
   attr(result,'inc_rate') <- inc_rate

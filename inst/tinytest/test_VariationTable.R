@@ -10,11 +10,13 @@ res <- lmCoDa(
 expect_equal(
   VariationTable(res, Xvar = "cbind(Age_1839, Age_4064)", Xdir = "Age_1839"),
   VariationTable(res, Xvar = "cbind(Age_1839, Age_4064)", Xdir = c(2,1)),
-  info = "Coherence between preferential and general direction.")
+  info = "Coherence between preferential and general direction.",
+  check.attributes = FALSE)
 
 resX <- VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.5,.4,.1))
 expect_true("elasticity" %in% tolower(rownames(resX)))
 expect_true(sum(attr(resX, "X(0)")) == 1)
+expect_true(sum(attr(resX, "X(h)")) == 1)
 expect_true(sum(attr(resX, "Xdir")) == 1)
 expect_true(sum(resX["Initial parts",]) == 1)
 expect_equivalent(sum(resX["New parts",]),1)
