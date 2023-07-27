@@ -3,7 +3,6 @@
 .Rdata
 .httr-oauth
 .DS_Store
-man
 
 
 data-raw/*
