@@ -8,8 +8,6 @@
 #' Changes in the response variables are provided as data.frame and the
 #' underlying changes in the explanatory variable are given as attributes.
 #'
-#' @details
-#' Developed in Dargel and Thomas-Agnan (2023)
 #'
 #' @inheritParams VariationScenario
 #' @param inc_rate a numeric that can be used as an parametrization of the step size

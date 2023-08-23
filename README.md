@@ -20,12 +20,17 @@ You can install the development version of CoDaImpact from
 devtools::install_github("LukeCe/CoDaImpact")
 ```
 
-## Example
+## Example of a Y-compositional model
 
-This is a basic example which shows you how to solve a common problem:
+Below we estimate a CoDa model where the dependent variable is a
+compositional and represents the market shares in different segments of
+the car market. To illustrate the influence of the
+`HOUSEHOLD_EXPENDITURE` on the market shares in each segment we use a
+variation scenario for one observation.
 
 ``` r
-library(CoDaImpact)
+library("CoDaImpact")
+data("car_market")
 
 model_car_segements <- lmCoDa(
   ilr(cbind(SEG_A, SEG_B, SEG_C, SEG_D, SEG_E)) ~
@@ -42,8 +47,8 @@ vs_exp2 <- VariationScenario(
 
 
 plot(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,1],type = "l", col = "red",
-     main = "Variation scenario of houshold expenditure for observation 1",
-     xlab = "Household expenditure", ylab = "Market share of segment")
+     main = "Variation scenario of household expenditure for observation 1",
+     xlab = "Household expenditure", ylab = "Market share by segment")
 lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,2],type = "l", col = "blue" )
 lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,3],type = "l", col = "green")
 lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,4],type = "l", col = "orange")

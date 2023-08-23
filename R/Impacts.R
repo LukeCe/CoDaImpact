@@ -15,7 +15,7 @@
 #' Dargel and Thomas-Agnan (2021) present further results and illustrations.
 #'
 #' @param object an object type lmCoDa
-#' @param Xvar a character indicating the name of one explnanotry variable
+#' @param Xvar a character indicating the name of one explanatory variable
 #' @param obs a numeric that refers to the indicator of one observation
 #'
 #' @return a matrix
@@ -32,7 +32,7 @@
 #' res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
 #' Impacts(res, Xvar = "TEMPERATURES")
 #'
-Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1){
+Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1) {
 
   stopifnot(is.character(Xvar) || length(Xvar) == 1,  # IDEA allow multiple variable
             is.numeric(obs) && isTRUE(obs >= 1) && obs <= nobs(object))

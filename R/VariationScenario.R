@@ -10,8 +10,7 @@
 #' The corresponding changes in Y are computed with the prediction formula, where we exploit the fact that only in one variable is changing.
 #'
 #'
-#' @param object an object of class lmCoDa
-# TODO use lmCoDa instead of lmSimplex
+#' @param object an object of class "lmCoDa"
 #' @param Xvar a character indicating the name of the explanatory variable that changes
 #' @param Xdir either character or numeric, to indicate the direction in which Xvar should change
 #'   - when character this should be one of the components of X, in which case the direction is the corresponding vertex of the simplex
