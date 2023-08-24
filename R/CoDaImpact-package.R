@@ -1,10 +1,13 @@
 #' @keywords internal
-#' @importFrom compositions alr clr ilr alrInv clrInv ilrInv
+#' @importFrom stats coef nobs resid
 "_PACKAGE"
 
 ## usethis namespace: start
 ## usethis namespace: end
 NULL
+
+
+# ---- Data Documentation ---------------------------------------------------------------
 
 
 #' Data on the rice yields in the Vietnamese provinces
@@ -91,3 +94,28 @@ NULL
 #' @name car_market
 "car_market"
 
+
+# ---- Reexports from package compositions ---------------------------------------------
+#' @importFrom compositions alr
+#' @export
+compositions::alr
+
+#' @importFrom compositions alrInv
+#' @export
+compositions::alrInv
+
+#' @importFrom compositions clr
+#' @export
+compositions::clr
+
+#' @importFrom compositions clrInv
+#' @export
+compositions::clrInv
+
+#' @importFrom compositions ilr
+#' @export
+compositions::ilr
+
+#' @importFrom compositions ilrInv
+#' @export
+compositions::ilrInv

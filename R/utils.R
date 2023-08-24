@@ -66,3 +66,11 @@ check_Xvar <- function(Xvar, trSry, return_type = c("NAME_SIMPLEX", "NAME_COORD"
   Xvar <- c(Xvar,recursive = TRUE, use.names = FALSE)
   return(Xvar)
 }
+
+#' Format numbers to percentages
+#' This code copied from stats:::format.perc(), to avoid notes about the ::: operator.
+#' @keywords internal
+pct <- function (probs, digits = 10) {
+  paste(format(100 * probs, trim = TRUE, scientific = FALSE, digits = digits), "%")
+}
+

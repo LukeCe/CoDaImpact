@@ -4,13 +4,15 @@
 \alias{residuals.lmCoDa}
 \title{Predictions, fitted values, residuals, and coefficients in CoDa models}
 \usage{
-\method{residuals}{lmCoDa}(object, space = NULL)
+\method{residuals}{lmCoDa}(object, space = NULL, ...)
 }
 \arguments{
 \item{object}{class "lmCoDa"}
 
 \item{space}{a character indicating in which space the prediction should
 be returned. Supported are the options \code{c("clr", "simplex")}.}
+
+\item{...}{passed on to \code{\link[=predict.lm]{predict.lm()}}}
 }
 \value{
 matrix or vector

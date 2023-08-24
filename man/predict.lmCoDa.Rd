@@ -12,7 +12,7 @@
 \item{space}{a character indicating in which space the prediction should
 be returned. Supported are the options \code{c("clr", "simplex")}.}
 
-\item{...}{passed on to \code{\link[=`predict.lm]{`predict.lm()}}}
+\item{...}{passed on to \code{\link[=predict.lm]{predict.lm()}}}
 }
 \description{
 These functions work as in the usual lm object.

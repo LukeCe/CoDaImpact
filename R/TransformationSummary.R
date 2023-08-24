@@ -20,6 +20,8 @@
 #' @keywords internal
 transformationSummary <- function(lm_res) {
 
+  stopifnot(inherits(lm_res, "lm"))
+
   coef_mat <- t(t(coef(lm_res)))
   mod <- lm_res[["model"]]
   if ("(Intercept)" %in% rownames(coef_mat))
@@ -149,10 +151,10 @@ whichTrans <- function(x) {
   if (!inherits(x[[1]], what = "rmult"))
     return(resTrans())
 
-  V <- compositions:::gsi.getV(x[[1]])
+  V   <- attr(x[[1]], "V")
   VVi <- crossprod(V)
   VVo <- tcrossprod(V)
-  D <- nrow(VVo)
+  D   <- nrow(VVo)
 
 
   # ilr tests and names

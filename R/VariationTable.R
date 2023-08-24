@@ -28,15 +28,18 @@
 #'   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)),
 #'   data =  head(election, 20))
 #'
-#' # Variation of age the education composition towards a summit ...
-#' # (higher share of people with lower education)
-#' VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = "Educ_BeforeHighschool")
+#' # Focus on changes in the education composition
+#' educ_comp <- "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)"
 #'
-#' # The same changes using a compositional vector as direction
-#' VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.5,.25,.25))
+#' # ... changes towards a summit towards a summit (higher share of people with lower education)
+#' VariationTable(res, educ_comp, Xdir = "Educ_BeforeHighschool")
 #'
-#' # Changes in a more general direction and for a diffrent observation
-#' VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.35,.45,.10), obs = 2)
+#' # ... same changes using a compositional vector as direction
+#' VariationTable(res, educ_comp, Xdir = c(.5,.25,.25))
+#'
+#' # ... changes in a more general direction and for a different observation
+#' VariationTable(res, educ_comp, Xdir = c(.35,.45,.10), obs = 2)
+#'
 VariationTable <- function(
     object,
     Xvar,
@@ -76,29 +79,12 @@ VariationTable <- function(
     # for compositional X we need to account for the direction in which X changes
     vertex_dir <- is.character(Xdir)
     Xdir  <- check_Xdir(Xdir, names(X0), normalize_Xdir)
+    elasti   <- log(Xdir) %*% elasti
 
     # link between alpha (ink_rate) and h (ink_size)
     inc_rates <- log(Xdir) - sum(as(X0,"vector") * log(Xdir))
     if (vertex_dir && !is.null(inc_rate)) inc_size <- inc_rate / inc_rates[which.max(Xdir)]
     inc_rates <- inc_rates * inc_size
-
-    # if (vertex_dir) {
-    #   Xvertex <- Xdir == names(X0)
-    #   if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(names(X0)), "!")
-    #   Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
-    #   Xdir <- Xdir/sum(Xdir)
-    #   if (!is.null(inc_rate)) inc_size <- inc_rate * sqrt((Dx-1)/Dx) / (1 - X0[Xvertex])
-    #   if (is.null(inc_rate))  inc_rate <- inc_size * sqrt(Dx/(Dx-1)) * (1 - X0[Xvertex])
-    # }
-    # if (!vertex_dir) {
-    #   valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
-    #   if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
-    #
-    #   Xdir <- ilr(Xdir)
-    #   Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
-    #   inc_rate <- NULL
-    # }
-    elasti   <- log(Xdir) %*% elasti
   }
 
   Ytotal <- if (scalar_y) 1 else Ytotal

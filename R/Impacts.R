@@ -23,17 +23,18 @@
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
 #' @export
+#' @rdname Impacts
 #' @references "
 #'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
-#'   - Morais, Joanna, and Christine Thomas-Agnan. "Impact of covariates in compositional models and simplicial derivatives." Austrian Journal of Statistics 50.2 (2021): 1-15.
-#'
+#'   - Morais, Joanna and Christine Thomas-Agnan. "Impact of covariates in compositional models and simplicial derivatives." Austrian Journal of Statistics 50.2 (2021): 1-15.
 #' @examples
 #' res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
 #' Impacts(res, Xvar = "TEMPERATURES")
 #'
-Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1) {
+Impacts <- function(object, Xvar=NULL, obs=1) {
 
-  stopifnot(is.character(Xvar) || length(Xvar) == 1,
+  stopifnot(is(object, "lmCoDa"),
+            is.character(Xvar) || length(Xvar) == 1,
             is.numeric(obs) && isTRUE(obs >= 1) && obs <= nobs(object))
 
   trSry <- object$trSry
@@ -57,10 +58,5 @@ Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1) {
   return(imp)
 }
 
-#' @export
-#' @noRd
-Impacts <- function(x, ...) {
-  UseMethod("Impacts")
-}
 
 

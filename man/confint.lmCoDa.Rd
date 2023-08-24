@@ -4,7 +4,7 @@
 \alias{confint.lmCoDa}
 \title{Confidence Intervals for CoDa Models}
 \usage{
-\method{confint}{lmCoDa}(object, parm, level = 0.95, y_ref = NULL, obs = NULL)
+\method{confint}{lmCoDa}(object, parm, level = 0.95, y_ref = NULL, obs = NULL, ...)
 }
 \arguments{
 \item{object}{class "lmCoDa"}
@@ -22,6 +22,8 @@ the direct intervals of the parameters.}
 \item{obs}{an optional integer that indicates one observation
 when this argument is supplied the function return the observation
 dependent elasticity}
+
+\item{...}{passed on to confit()}
 }
 \value{
 data.frame
@@ -65,10 +67,18 @@ confint(res, "unemp_rate", obs = 1)
 ## ---- CI for compositional X
 # CI for clr parameters
 confint(res, "cbind(Age_1839, Age_4064)")
+
 # CI for difference in clr parameters (coincides with difference in the elasticity)
 confint(res, "cbind(Age_1839, Age_4064)", y_ref = 1)
+
 # CI for the observation dependent elasticity
 confint(res, "cbind(Age_1839, Age_4064)", obs = 1)
+
+}
+\references{
+\itemize{
+\item Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+}
 }
 \author{
 Lukas Dargel

@@ -11,11 +11,12 @@ VariationTable(
   obs = 1,
   inc_size = 0.1,
   inc_rate = NULL,
-  Ytotal = 1
+  Ytotal = 1,
+  normalize_Xdir = TRUE
 )
 }
 \arguments{
-\item{object}{an object of class lmCoDa}
+\item{object}{an object of class "lmCoDa"}
 
 \item{Xvar}{a character indicating the name of the explanatory variable that changes}
 
@@ -30,9 +31,11 @@ VariationTable(
 
 \item{inc_size}{a numeric indicating the distance between each point in the scenario of X}
 
-\item{inc_rate}{a numeric that can be used as an parametrization of the step size}
+\item{inc_rate}{a numeric that can be used as a parameterization of the step size}
 
 \item{Ytotal}{a numeric indicating the total of Y}
+
+\item{normalize_Xdir}{a logical, if \code{TRUE} the direction \code{Xdir} scaled to have an Aitchison norm of 1, allowing to interpret \code{inc_size} as the Aitchison distance}
 }
 \value{
 data.frame
@@ -45,9 +48,6 @@ in Dargel and Thomas-Agnan (2023).
 Changes in the response variables are provided as data.frame and the
 underlying changes in the explanatory variable are given as attributes.
 }
-\details{
-Developed in Dargel and Thomas-Agnan (2023)
-}
 \examples{
 
 # XY-compositional model
@@ -56,15 +56,23 @@ res <- lmCoDa(
   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)),
   data =  head(election, 20))
 
-# Variation of age the education composition towards a summit ...
-# (higher share of people with lower education)
-VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = "Educ_BeforeHighschool")
+# Focus on changes in the education composition
+educ_comp <- "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)"
 
-# The same changes using a compositional vector as direction
-VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.5,.25,.25))
+# ... changes towards a summit towards a summit (higher share of people with lower education)
+VariationTable(res, educ_comp, Xdir = "Educ_BeforeHighschool")
 
-# Changes in a more general direction and for a diffrent observation
-VariationTable(res, Xvar = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", Xdir = c(.35,.45,.10), obs = 2)
+# ... same changes using a compositional vector as direction
+VariationTable(res, educ_comp, Xdir = c(.5,.25,.25))
+
+# ... changes in a more general direction and for a different observation
+VariationTable(res, educ_comp, Xdir = c(.35,.45,.10), obs = 2)
+
+}
+\references{
+\itemize{
+\item Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+}
 }
 \author{
 \itemize{

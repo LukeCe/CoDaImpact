@@ -43,6 +43,7 @@
 #'
 #' VariationScenario(res, Xvar ="cbind(Age_1839,Age_4064)",Xdir = "Age_1839", n_steps = 5)
 #' VariationScenario(res, "log(unemp_rate)", n_steps = 5)
+#'
 VariationScenario <- function(
     object,
     Xvar,
@@ -90,20 +91,8 @@ VariationScenario <- function(
 
   if (!scalar_x) {
     Xdir <- check_Xdir(Xdir, colnames(X0), normalize_Xdir)
-    # define the unit direction
-    # if (is.character(Xdir)) {
-    #   Xvertex <- Xdir == colnames(X0)
-    #   if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(colnames(X0)), "!")
-    #   Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
-    #   Xdir <- Xdir/sum(Xdir)
-    # } else {
-    #   valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
-    #   if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
-    #   Xdir <- ilr(Xdir)
-    #   Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
-    # }
-
     Xcoef <- trSry$COEF_CLR[[Xvar]]
+
     Xscenario <- CoDa_path(rep(1/Dx, Dx), comp_direc = Xdir, step_size = inc_size, n_steps = n_steps, add_opposite = add_opposite)
     Xscenario <- log(as.matrix(Xscenario)) %*% clrBase(Dx)
     Yscenario <- if (scalar_y) Y0 else Y0[rep(1,nrow(Xscenario)),]

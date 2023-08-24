@@ -11,13 +11,12 @@
 #' @param add_opposite A logical, if `TRUE` the path in the opposite direction is added
 #'
 #' @importFrom compositions ilr ilrInv
-#' @return A data.frame frame where each point corresponds to one compositional vector
+#' @importFrom methods is as
+#' @return A data.frame frame where each row corresponds to one compositional vector
 #' @seealso simplex_increment
 #' @export
 #'
 #' @author Lukas Dargel
-# TODO add citation
-# @references "full cite Dargel & Thomas-Agnan (2023)"
 #' @examples
 #'
 #' # path to the first summit of the simplex
@@ -50,10 +49,11 @@ CoDa_seq <- function(
     is.numeric(comp_from),
     is.numeric(comp_to))
 
-  if (isTRUE(nrow(comp_from) > 1)) stop("comp_from must be a single compostional vector!")
-  if (isTRUE(nrow(comp_to) > 1)) stop("comp_to must be a single compostional vector!")
-  if (is.matrix(comp_from)) comp_from <- comp_from[1,]
-  if (is.matrix(comp_to)) comp_to <- comp_to[1,]
+  check <- " must be a single compostional vector!"
+  if (isTRUE(nrow(comp_from) > 1)) stop("comp_from", check)
+  if (isTRUE(nrow(comp_to) > 1)) stop("comp_to", check)
+  comp_from <- as(comp_from, "vector")
+  comp_to <- as(comp_to, "vector")
 
   # save total and replace zeros
   Tstart <- sum(comp_from)
@@ -114,16 +114,13 @@ CoDa_seq <- function(
 #' @param add_opposite A logical, if `TRUE` steps in the opposite direction are also computed
 #' @param dir_from_start A logical, if `TRUE` the direction is calculated from the difference between `comp_from` and `comp_direc`
 #'
+#' @return A data.frame frame where each row corresponds to one compositional vector
 #' @importFrom compositions ilr
-#' @return A data.frame frame where each point corresponds to one compositional vector
 #' @seealso CoDa_seq
 #' @export
 #'
 #' @author Lukas Dargel
-# TODO add citation
-#' @references "full cite Dargel & Thomas-Agnan (2023)"
 #' @examples
-#'
 #'
 #' # three steps that go from the origin towards the defined direction
 #' comp_direc <- c(A =.4,B = .35, C= .25)
@@ -146,11 +143,21 @@ CoDa_seq <- function(
 #'
 #'
 #' # the balanced composition does not define a direction by itself
-#' comp_dir <- c(A = 1/3, B = 1/3, C= 1/3) # corresponds to a zero vector in real space
-#' \dontrun{CoDa_path(comp_direc, comp_from,add_opposite = TRUE)}
+#' comp_origin <- c(A = 1/3, B = 1/3, C= 1/3) # corresponds to a zero vector in real space
+#' \dontrun{CoDa_path(comp_origin, comp_from,add_opposite = TRUE)}
 #'
-#' # with the dir_from_start option the direction is derived from the line connecting two compositions
-#' compositions::plot.acomp(CoDa_path(comp_direc, comp_from,add_opposite = TRUE, dir_from_start = TRUE))
+#' # with the dir_from_start option the direction is derived
+#' # from the simplex line connecting two compositions
+#' path_origin <- CoDa_path(
+#'   comp_direc = comp_origin,
+#'   comp_from = comp_from,
+#'   add_opposite = TRUE,
+#'   dir_from_start = TRUE,
+#'   step_size = .1)
+#' compositions::plot.acomp(path_origin)
+#' compositions::plot.acomp(comp_origin, add = TRUE, col = "blue", pch = 19)
+#' compositions::plot.acomp(comp_from, add = TRUE, col = "red", pch = 19)
+#'
 CoDa_path <- function(
   comp_direc,
   comp_from,
@@ -197,8 +204,8 @@ CoDa_path <- function(
 
   ilr_start <- ilr(comp_from)
   ilr_direc <- ilr(comp_direc) - if (dir_from_start) ilr_start else 0
-
   ilr_direc <- ilr_direc/sqrt(sum(ilr_direc^2))
+  if (any(!is.finite(ilr_direc))) stop("The simplex direction is invalid!")
 
   # calculate the end point and use CoDa_seq
   ilr_end <- ilr_start + ilr_direc * n_steps * step_size

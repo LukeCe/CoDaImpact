@@ -11,11 +11,12 @@ VariationScenario(
   obs = 1,
   inc_size = 0.1,
   n_steps = 100,
-  add_opposite = TRUE
+  add_opposite = TRUE,
+  normalize_Xdir = TRUE
 )
 }
 \arguments{
-\item{object}{an object of class lmCoDa}
+\item{object}{an object of class "lmCoDa"}
 
 \item{Xvar}{a character indicating the name of the explanatory variable that changes}
 
@@ -33,6 +34,8 @@ VariationScenario(
 \item{n_steps}{a numeric indicating the number of points in the scenario}
 
 \item{add_opposite}{a logical, if \code{TRUE} the scenario also includes changes in the opposite direction}
+
+\item{normalize_Xdir}{a logical, if \code{TRUE} the direction \code{Xdir} scaled to have an Aitchison norm of 1, allowing to interpret \code{inc_size} as the Aitchison distance}
 }
 \value{
 a data.frame containing the scenario of X and the corresponding predicted values of Y
@@ -61,11 +64,14 @@ res <- lmCoDa(ilr(cbind(left, right, extreme_right)) ~
                 log(unemp_rate),
               data = head(election))
 
-VariationScenario(res, "cbind(Age_1839,Age_4064)",Xdir = "Age_1839", n_steps = 5)
+VariationScenario(res, Xvar ="cbind(Age_1839,Age_4064)",Xdir = "Age_1839", n_steps = 5)
 VariationScenario(res, "log(unemp_rate)", n_steps = 5)
+
 }
 \references{
-"full citation of Dargel and Thomas-Agnan (2023)"
+\itemize{
+\item Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+}
 }
 \author{
 Lukas Dargel

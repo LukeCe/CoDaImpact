@@ -16,7 +16,7 @@ CoDa_seq(comp_from, comp_to, n_steps = 100, add_opposite = FALSE)
 \item{add_opposite}{A logical, if \code{TRUE} the path in the opposite direction is added}
 }
 \value{
-A data.frame frame where each point corresponds to one compositional vector
+A data.frame frame where each row corresponds to one compositional vector
 }
 \description{
 A sequence connecting two points in a simplex

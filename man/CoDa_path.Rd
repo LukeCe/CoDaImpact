@@ -27,7 +27,7 @@ CoDa_path(
 \item{dir_from_start}{A logical, if \code{TRUE} the direction is calculated from the difference between \code{comp_from} and \code{comp_direc}}
 }
 \value{
-A data.frame frame where each point corresponds to one compositional vector
+A data.frame frame where each row corresponds to one compositional vector
 }
 \description{
 Create a linear path in the simplex by defining a direction and a step size
@@ -37,7 +37,6 @@ The function is very similar to \code{\link[=CoDa_seq]{CoDa_seq()}}.
 However, of drawing a line between a starting and end point it uses only a starting point and a direction.
 }
 \examples{
-
 
 # three steps that go from the origin towards the defined direction
 comp_direc <- c(A =.4,B = .35, C= .25)
@@ -60,14 +59,21 @@ compositions::plot.acomp(CoDa_path(comp_direc, comp_from,add_opposite = TRUE))
 
 
 # the balanced composition does not define a direction by itself
-comp_dir <- c(A = 1/3, B = 1/3, C= 1/3) # corresponds to a zero vector in real space
-\dontrun{CoDa_path(comp_direc, comp_from,add_opposite = TRUE)}
+comp_origin <- c(A = 1/3, B = 1/3, C= 1/3) # corresponds to a zero vector in real space
+\dontrun{CoDa_path(comp_origin, comp_from,add_opposite = TRUE)}
 
-# with the dir_from_start option the direction is derived from the line connecting two compositions
-compositions::plot.acomp(CoDa_path(comp_direc, comp_from,add_opposite = TRUE, dir_from_start = TRUE))
-}
-\references{
-"full cite Dargel & Thomas-Agnan (2023)"
+# with the dir_from_start option the direction is derived
+# from the simplex line connecting two compositions
+path_origin <- CoDa_path(
+  comp_direc = comp_origin,
+  comp_from = comp_from,
+  add_opposite = TRUE,
+  dir_from_start = TRUE,
+  step_size = .1)
+compositions::plot.acomp(path_origin)
+compositions::plot.acomp(comp_origin, add = TRUE, col = "blue", pch = 19)
+compositions::plot.acomp(comp_from, add = TRUE, col = "red", pch = 19)
+
 }
 \seealso{
 CoDa_seq

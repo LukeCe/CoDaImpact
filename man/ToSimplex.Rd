@@ -6,6 +6,9 @@
 \usage{
 ToSimplex(object)
 }
+\arguments{
+\item{object}{an object of class "lmCoDa"}
+}
 \value{
 an object of class "lm" and "lmCoDa" if the formula include at least
 one log-transformation

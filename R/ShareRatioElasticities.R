@@ -20,7 +20,7 @@
 #'
 #' @author Lukas Dargel
 #' @references
-#'   - Lukas Dargel, and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
 #' @export
 #' @examples
 #'
@@ -30,28 +30,37 @@
 #'   ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)),
 #'   data =  head(election, 20))
 #'
-#' ## summit "Educ_Higher" as (fixed) direction
-#' SRE1 <- ShareRatioElasticities(res, "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)","Educ_Higher")
+#' ## Focus on changes in the education composition
+#' educ_comp <- "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)"
+#'
+#' ## case 1
+#' ## changes towards the summit "Educ_Higher" as (fixed) direction
+#' SRE1 <- ShareRatioElasticities(res, Xvar = educ_comp, Xdir = "Educ_Higher")
 #'
 #' SRE1[1,]
-#' # SRE=Inf: cannot be interpreted for this direction because
-#' #          the relative change in the share ratio of X (Highschool / BeforeHighschool) is zero
+#' # Result: SRE=Inf
+#' # cannot be interpreted because, for this direction,
+#' # the relative change in the share ratio of X (Highschool / BeforeHighschool) is zero
 #' SRE1[7,]
-#' # SRE=0.9: when the ratio of X (Higher / BeforeHighschool) increases by 1%
-#' #          the ratio of Y (right / left) increases by about 0.9%
+#' # Result: SRE=0.9
+#' # when the ratio of X (Higher / BeforeHighschool) increases by 1%
+#' # the ratio of Y (right / left) increases by about 0.9%
 #'
+#' ## case 2
 #' ## numeric vector as (fixed) direction
-#' SRE2 <- ShareRatioElasticities(res, "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", exp(c(0,0,1)))
-#'
+#' SRE2 <- ShareRatioElasticities(res, Xvar = educ_comp, Xdir = exp(c(0,0,1)))
 #' identical(SRE1,SRE2) # exp(c(0,0,1)) is the direction that points to the third summit
 #'
+#' ## case 3
 #' ## variable directions with Xdir = NULL
 #' ## In this case the direction depends components used for the share ratio of X
-#' ## In particular the component of X in the numerator grows by the same rate as the denominator decreases
-#' SRE3 <- ShareRatioElasticities(res, "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)")
+#' ## In particular the component of X in the numerator grows
+#' ## by the same rate as the denominator decreases
+#' SRE3 <- ShareRatioElasticities(res, Xvar = educ_comp, Xdir = NULL)
 #' SRE3[1,]
-#' # SRE=-2.8: when the ratio of X (Highschool / BeforeHighschool) increases by 1%
-#' #           the ratio of Y (right / left) decreases by about -2.8%
+#' # Result: SRE=-2.8
+#' # when the ratio of X (Highschool / BeforeHighschool) increases by 1%
+#' # the ratio of Y (right / left) decreases by about -2.8%
 ShareRatioElasticities <- function(
     object,
     Xvar,

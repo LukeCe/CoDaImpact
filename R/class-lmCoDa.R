@@ -45,6 +45,7 @@ lmCoDa <- function(formula, data, ...) {
 #'
 #'
 #' @inherit lmCoDa return examples
+#' @inheritParams VariationScenario
 #' @seealso [lm()], [lmCoDa()]
 #' @author
 #'   - Lukas Dargel
@@ -90,7 +91,7 @@ ToSimplex <- function(object){
 #' @param object class "lmCoDa"
 #' @param space a character indicating in which space the prediction should
 #'   be returned. Supported are the options `c("clr", "simplex")`.
-#' @param ... passed on to [`predict.lm()]
+#' @param ... passed on to [predict.lm()]
 #' @author Lukas Dargel
 #' @exportS3Method
 predict.lmCoDa <- function(object, space = NULL, ...) {
@@ -115,7 +116,7 @@ predict.lmCoDa <- function(object, space = NULL, ...) {
 #' @return matrix or vector
 #' @author Lukas Dargel
 #' @exportS3Method
-residuals.lmCoDa <- function(object, space = NULL) {
+residuals.lmCoDa <- function(object, space = NULL, ...) {
 
   stopifnot(is.null(space) || space %in% c("clr", "simplex"))
   resi <- object$residuals
@@ -136,9 +137,10 @@ residuals.lmCoDa <- function(object, space = NULL) {
 
 #' @inherit predict.lmCoDa title description details params
 #' @return matrix or vector
+#' @importFrom stats fitted
 #' @author Lukas Dargel
 #' @exportS3Method
-fitted.lmCoDa <- function(object, space = NULL) {
+fitted.lmCoDa <- function(object, space = NULL, ...) {
 
   stopifnot(is.null(space) || space %in% c("clr", "simplex"))
   fity <- object$fitted.values

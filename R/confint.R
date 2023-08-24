@@ -30,12 +30,14 @@
 #' @param obs an optional integer that indicates one observation
 #'   when this argument is supplied the function return the observation
 #'   dependent elasticity
+#' @param ... passed on to confit()
 #' @return data.frame
 #'
-#' @author Lukas Dargel
-# TODO @references
-#'
 #' @exportS3Method
+#' @importFrom stats qt
+#' @author Lukas Dargel
+#' @references
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
 #' @examples
 #'
 #' ## ==== Y-compositional model ====
@@ -57,16 +59,20 @@
 #' ## ---- CI for compositional X
 #' # CI for clr parameters
 #' confint(res, "cbind(Age_1839, Age_4064)")
+#'
 #' # CI for difference in clr parameters (coincides with difference in the elasticity)
 #' confint(res, "cbind(Age_1839, Age_4064)", y_ref = 1)
+#'
 #' # CI for the observation dependent elasticity
 #' confint(res, "cbind(Age_1839, Age_4064)", obs = 1)
+#'
 confint.lmCoDa <- function(
     object,
     parm,
     level = .95,
     y_ref = NULL,
-    obs = NULL) {
+    obs = NULL,
+    ...) {
 
   stopifnot(level > 0 && level < 1,
             is.character(parm) && length(parm) == 1,
@@ -78,7 +84,7 @@ confint.lmCoDa <- function(
   Xpos <- c(which(parm == object$trSry$NAME_SIMPLEX),use.names = FALSE)
 
   if (all(0 == c(trSry$D[[1]], trSry$D[[Xpos]])))
-    return(confint.lm(object, rownames(trSry)[Xpos], level))
+    return(stats::confint.lm(object, rownames(trSry)[Xpos], level))
 
   est_coef <- t(trSry[["COEF_CLR"]][[Xpos]])
   vcov_x <- trSry[["VARCOV_CLR"]][[Xpos]]
@@ -89,8 +95,6 @@ confint.lmCoDa <- function(
   a <- (1 - level)/2
   a <- c(a, 1 - a)
   qlevel <- qt(a, df_eq)
-  pct <- function(x) stats:::format.perc(x, 10)
-
 
   # 3 cases
   if (ncol(vcov_y) < 2) y_ref <- obs <- NULL # when scalar y we only need clr
