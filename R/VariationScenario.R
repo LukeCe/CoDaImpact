@@ -20,11 +20,11 @@
 #' @param inc_size a numeric indicating the distance between each point in the scenario of X
 #' @param n_steps a numeric indicating the number of points in the scenario
 #' @param add_opposite a logical, if `TRUE` the scenario also includes changes in the opposite direction
-#'
+#' @param normalize_Xdir a logical, if `TRUE` the direction `Xdir` scaled to have an Aitchison norm of 1, allowing to interpret `inc_size` as the Aitchison distance
 #' @return a data.frame containing the scenario of X and the corresponding predicted values of Y
 #' @author Lukas Dargel
-# TODO update reference
-#' @references "full citation of Dargel and Thomas-Agnan (2023)"
+#' @references
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
 #' @export
 #' @examples
 #'
@@ -41,7 +41,7 @@
 #'                 log(unemp_rate),
 #'               data = head(election))
 #'
-#' VariationScenario(res, "cbind(Age_1839,Age_4064)",Xdir = "Age_1839", n_steps = 5)
+#' VariationScenario(res, Xvar ="cbind(Age_1839,Age_4064)",Xdir = "Age_1839", n_steps = 5)
 #' VariationScenario(res, "log(unemp_rate)", n_steps = 5)
 VariationScenario <- function(
     object,
@@ -50,7 +50,8 @@ VariationScenario <- function(
     obs = 1,
     inc_size = .1,
     n_steps = 100,
-    add_opposite = TRUE) {
+    add_opposite = TRUE,
+    normalize_Xdir = TRUE) {
 
   stopifnot(is(object, "lmCoDa"),
             is.character(Xvar) && length(Xvar) == 1,
@@ -64,10 +65,7 @@ VariationScenario <- function(
   trSry <- object$trSry
 
   # get X0
-  Anames <- unlist(trSry$NAME_SIMPLEX)
-  Xnames <- setdiff(Anames[-1], "(Intercept)")
-  if (!Xvar %in% Xnames) stop("Xvar musst be one of ", list(Xnames), "!")
-  Xvar <- unlist(trSry$NAME_COORD[Xvar == Anames])
+  Xvar <- check_Xvar(Xvar, trSry, "NAME_COORD")
   Dx <- trSry$D[[Xvar]]
   scalar_x <- Dx == 0
   Kx <- trSry$LR_BASE_K[[Xvar]]
@@ -91,18 +89,19 @@ VariationScenario <- function(
   }
 
   if (!scalar_x) {
+    Xdir <- check_Xdir(Xdir, colnames(X0), normalize_Xdir)
     # define the unit direction
-    if (is.character(Xdir)) {
-      Xvertex <- Xdir == colnames(X0)
-      if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(colnames(X0)), "!")
-      Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
-      Xdir <- Xdir/sum(Xdir)
-    } else {
-      valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
-      if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
-      Xdir <- ilr(Xdir)
-      Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
-    }
+    # if (is.character(Xdir)) {
+    #   Xvertex <- Xdir == colnames(X0)
+    #   if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(colnames(X0)), "!")
+    #   Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
+    #   Xdir <- Xdir/sum(Xdir)
+    # } else {
+    #   valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
+    #   if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
+    #   Xdir <- ilr(Xdir)
+    #   Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
+    # }
 
     Xcoef <- trSry$COEF_CLR[[Xvar]]
     Xscenario <- CoDa_path(rep(1/Dx, Dx), comp_direc = Xdir, step_size = inc_size, n_steps = n_steps, add_opposite = add_opposite)

@@ -10,14 +10,15 @@
 #'
 #'
 #' @inheritParams VariationScenario
-#' @param inc_rate a numeric that can be used as an parametrization of the step size
+#' @param inc_rate a numeric that can be used as a parameterization of the step size
 #' @param Ytotal a numeric indicating the total of Y
 #' @return data.frame
 #'
 #' @author
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
-# TODO @references
+#' @references
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
 #' @export
 #' @examples
 #'
@@ -43,7 +44,8 @@ VariationTable <- function(
     obs = 1,
     inc_size = .1,
     inc_rate = NULL,
-    Ytotal = 1) {
+    Ytotal = 1,
+    normalize_Xdir = TRUE) {
 
   stopifnot(is(object, "lmCoDa"),
             is.character(Xvar) && length(Xvar) == 1,
@@ -57,10 +59,7 @@ VariationTable <- function(
   if (all(trSry$LR_TRAN[c(1, Xvar)] == "")) stop("Variation tables are only meaningful if X or Y are compositional!")
 
   # get X0
-  Anames <- unlist(trSry$NAME_SIMPLEX)
-  Xnames <- setdiff(Anames[-1], "(Intercept)")
-  if (!Xvar %in% Xnames) stop("Xvar musst be one of ", list(Xnames), "!")
-  Xvar <- unlist(trSry$NAME_COORD[Xvar == Anames])
+  Xvar <- check_Xvar(Xvar, trSry, "NAME_COORD")
   Dx <- trSry$D[[Xvar]]
   scalar_x <- Dx == 0
   X0 <- object$model[[Xvar]]
@@ -74,24 +73,31 @@ VariationTable <- function(
   elasti <- Impacts(object, trSry$NAME_SIMPLEX[[Xvar]], obs)
 
   if (!scalar_x) {
-    # for compositional X we need to account for the in which X changes
+    # for compositional X we need to account for the direction in which X changes
     vertex_dir <- is.character(Xdir)
-    if (vertex_dir) {
-      Xvertex <- Xdir == names(X0)
-      if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(names(X0)), "!")
-      Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
-      Xdir <- Xdir/sum(Xdir)
-      if (!is.null(inc_rate)) inc_size <- inc_rate * sqrt((Dx-1)/Dx) / (1 - X0[Xvertex])
-      if (is.null(inc_rate))  inc_rate <- inc_size * sqrt(Dx/(Dx-1)) * (1 - X0[Xvertex])
-    }
-    if (!vertex_dir) {
-      valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
-      if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
+    Xdir  <- check_Xdir(Xdir, names(X0), normalize_Xdir)
 
-      Xdir <- ilr(Xdir)
-      Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
-      inc_rate <- NULL
-    }
+    # link between alpha (ink_rate) and h (ink_size)
+    inc_rates <- log(Xdir) - sum(as(X0,"vector") * log(Xdir))
+    if (vertex_dir && !is.null(inc_rate)) inc_size <- inc_rate / inc_rates[which.max(Xdir)]
+    inc_rates <- inc_rates * inc_size
+
+    # if (vertex_dir) {
+    #   Xvertex <- Xdir == names(X0)
+    #   if (sum(Xvertex) != 1) stop("When charater; Xdir must be one of ", list(names(X0)), "!")
+    #   Xdir <- exp(Xvertex)^sqrt(Dx/(Dx-1))
+    #   Xdir <- Xdir/sum(Xdir)
+    #   if (!is.null(inc_rate)) inc_size <- inc_rate * sqrt((Dx-1)/Dx) / (1 - X0[Xvertex])
+    #   if (is.null(inc_rate))  inc_rate <- inc_size * sqrt(Dx/(Dx-1)) * (1 - X0[Xvertex])
+    # }
+    # if (!vertex_dir) {
+    #   valid_dir <- length(Xdir) == length(X0) && all(Xdir > 0)
+    #   if (!valid_dir) stop("When numeric; Xdir must be a positive vector of length ", length(X0), "!")
+    #
+    #   Xdir <- ilr(Xdir)
+    #   Xdir <- as(ilrInv(Xdir/sqrt(sum(Xdir^2))),"vector")
+    #   inc_rate <- NULL
+    # }
     elasti   <- log(Xdir) %*% elasti
   }
 
@@ -111,12 +117,12 @@ VariationTable <- function(
   result <- lapply(names(explanation), evalString)
   result <- data.frame(Reduce("rbind", result), row.names = explanation, check.names = FALSE)
 
-  if (scalar_x) Xdir <- inc_rate <- NULL
+  if (scalar_x) Xdir <- inc_rates <- NULL
   attr(result,'X(0)')     <- X0
-  attr(result,'X(h)')     <- if (scalar_x) X0 + inc_size else as(X0, "vector") * (1 + inc_size * (log(Xdir) - sum(X0 * log(Xdir))))
+  attr(result,'X(h)')     <- if (scalar_x) X0 + inc_size else as(X0, "vector") * (1 + inc_rates)
   attr(result,'Xdir')     <- Xdir
   attr(result,'inc_size') <- inc_size
-  attr(result,'inc_rate') <- inc_rate
+  attr(result,'inc_rates') <- inc_rates
   return(result)
 }
 

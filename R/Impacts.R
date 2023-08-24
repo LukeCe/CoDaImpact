@@ -14,7 +14,7 @@
 #' from Morais and Thomas-Agnan (2021).
 #' Dargel and Thomas-Agnan (2021) present further results and illustrations.
 #'
-#' @param object an object type lmCoDa
+#' @param object an object of class "lmCoDa"
 #' @param Xvar a character indicating the name of one explanatory variable
 #' @param obs a numeric that refers to the indicator of one observation
 #'
@@ -23,10 +23,9 @@
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
 #' @export
-# TODO refs
 #' @references "
-#'   - Dargel & T-A (2023)
-#'   - Morais & T-A (2021)
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+#'   - Morais, Joanna, and Christine Thomas-Agnan. "Impact of covariates in compositional models and simplicial derivatives." Austrian Journal of Statistics 50.2 (2021): 1-15.
 #'
 #' @examples
 #' res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
@@ -34,19 +33,17 @@
 #'
 Impacts.lmCoDa <- function(object, Xvar=NULL, obs=1) {
 
-  stopifnot(is.character(Xvar) || length(Xvar) == 1,  # IDEA allow multiple variable
+  stopifnot(is.character(Xvar) || length(Xvar) == 1,
             is.numeric(obs) && isTRUE(obs >= 1) && obs <= nobs(object))
 
-  trSry <- transformationSummary(object)
-  Anames <- unlist(trSry$NAME_SIMPLEX)
-  Xnames <- setdiff(Anames[-1], "(Intercept)")
-  if (!Xvar %in% Xnames) stop("Xvar must be one of the following:", list(Xnames))
-  Xvar <- which(Xvar == Anames)
+  trSry <- object$trSry
+  Xvar <- check_Xvar(Xvar, trSry,return_type = "pos")
   Xcoef <- trSry$COEF_CLR[[Xvar]]
 
+  check <- "Impacts are only meaningful if X or Y are compositional!"
   YX_is_compo <- c("" != trSry$LR_TRAN[c(1, Xvar)], use.names = FALSE)
   if (identical(YX_is_compo, c(FALSE, FALSE)))
-    stop("Impacts are only meaningful if X or Y are compositional!")
+    stop(check)
 
   if (identical(YX_is_compo, c(FALSE, TRUE)))
     return(Xcoef)

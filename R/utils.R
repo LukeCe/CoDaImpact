@@ -34,3 +34,35 @@ check_Xdir <- function(Xdir, Xopts, normalize = FALSE) {
     return(Xdir/sum(Xdir))
   }
 }
+
+#' Internal: check for valid name of Xvar
+#'
+#' Users should always specify Xvar as "NAME_SIMLEX",
+#' which means before logratio transformations.
+#'
+#' @param Xvar a character or numeric indicating the direction
+#' @param trSry a character indicating the names of the vertices
+#' @return a single integer or character
+#'
+#' @author Lukas Dargel
+#' @keywords internal
+check_Xvar <- function(Xvar, trSry, return_type = c("NAME_SIMPLEX", "NAME_COORD", "pos")[1]) {
+
+  stopifnot(is.character(Xvar) && length(Xvar) == 1,
+            is.data.frame(trSry),
+            isTRUE(return_type %in% c("NAME_COORD", "NAME_SIMPLEX", "pos")))
+
+
+  Anames <- unlist(trSry$NAME_SIMPLEX, use.names = FALSE)
+  Xnames <- setdiff(Anames[-1], "(Intercept)")
+  is_Xvar <- gsub(" ", "", Xvar) == gsub(" ", "", Xnames)   # tolerate blanks
+  if (sum(is_Xvar) != 1) stop("Xvar musst be one of ", list(Xnames), "!")
+
+  Xvar <- Xnames[is_Xvar]
+  Xvar <- switch(return_type,
+    "NAME_SIMPLEX" = Xvar,
+    "NAME_COORD"   = trSry$NAME_COORD[Xvar == Anames],
+    "pos"          = which(Anames == Xvar))
+  Xvar <- c(Xvar,recursive = TRUE, use.names = FALSE)
+  return(Xvar)
+}
