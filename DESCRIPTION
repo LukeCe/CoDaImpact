@@ -1,5 +1,5 @@
 Package: CoDaImpact
-Title: Tools for interpreting compositional regression
+Title: Tools for interpreting CoDa regression models
 Version: 0.0.0.9001
 Authors@R: c(
     person("Lukas", "Dargel", role = c("aut", "cre"),  email = "lukas.dargel@mailbox.org", comment = c(ORCID = "0000-0002-4839-506X")),
@@ -9,7 +9,7 @@ Authors@R: c(
     person("Iban", "Rendo Barreiro", role = "ctb"),
     person("Shuyao", "Li", role = "ctb"))
 Description: 
-    The package implements elasticities for interpreting CoDa regression models in the simplex.
+    The package implements impacts and elasticities for interpreting CoDa regression models in the simplex.
     It is designed as an add-on to the composition package and its ecosystem.
 License: GPL (>= 3)
 Encoding: UTF-8

@@ -16,14 +16,15 @@ knitr::opts_chunk$set(
 # CoDaImpact
 
 <!-- badges: start -->
+
 <!-- badges: end -->
 
-**CoDaImpact** provides additional tools for the interpretation of CoDa models. 
+[**CoDaImpact**](https://lukece.github.io/CoDaImpact/) provides additional tools for the interpretation of regression CoDa models.
 It is conceived as an extension of the [**compositions**](http://www.stat.boogaart.de/compositions/) package.
 
 ## Installation
 
-You can install the development version of CoDaImpact from [GitHub](https://github.com/) with:
+You can install the development version of **CoDaImpact** from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -32,8 +33,9 @@ devtools::install_github("LukeCe/CoDaImpact")
 
 ## Example of a Y-compositional model
 
-Below we estimate a CoDa model where the dependent variable is a compositional and represents the market shares in different segments of the car market.
-To illustrate the influence  of the `HOUSEHOLD_EXPENDITURE` on the market shares in each segment we use a variation scenario for one observation.
+Below, we estimate a CoDa model that explains the market shares of [five segments of the car market](https://en.wikipedia.org/wiki/Car_classification#Market_segments) in France.
+To illustrate the influence of the `HOUSEHOLD_EXPENDITURE` on the market shares in each segment we use a `VariationScenario()`.
+In this scenario the `HOUSEHOLD_EXPENDITURE` is moved along a grid while all other variables are fixed to the values of the first observation.
 
 ```{r example}
 library("CoDaImpact")
@@ -44,7 +46,7 @@ model_car_segements <- lmCoDa(
     GDP + HOUSEHOLD_EXPENDITURE + GAS_PRICE,
   data = car_market)
 
-vs_exp2 <- VariationScenario(
+VS <- VariationScenario(
   model_car_segements,
   Xvar = "HOUSEHOLD_EXPENDITURE",
   obs = 1,
@@ -53,15 +55,15 @@ vs_exp2 <- VariationScenario(
   add_opposite = TRUE)
 
 
-plot(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,1],type = "l", col = "red",
-     main = "Variation scenario of household expenditure for observation 1",
+plot(x = VS$HOUSEHOLD_EXPENDITURE, y = VS$Y[,1],type = "l", col = "red",
+     main = "Variation scenario of household expenditure",
      xlab = "Household expenditure", ylab = "Market share by segment")
-lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,2],type = "l", col = "blue" )
-lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,3],type = "l", col = "green")
-lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,4],type = "l", col = "orange")
-lines(x = vs_exp2$HOUSEHOLD_EXPENDITURE, y = vs_exp2$Y[,5],type = "l", col = "black")
+lines(x = VS$HOUSEHOLD_EXPENDITURE, y = VS$Y[,2],type = "l", col = "blue" )
+lines(x = VS$HOUSEHOLD_EXPENDITURE, y = VS$Y[,3],type = "l", col = "green")
+lines(x = VS$HOUSEHOLD_EXPENDITURE, y = VS$Y[,4],type = "l", col = "orange")
+lines(x = VS$HOUSEHOLD_EXPENDITURE, y = VS$Y[,5],type = "l", col = "black")
 legend("topleft",
-       legend = paste0("SEG_", LETTERS[1:5]),
+       legend = paste0("Segment ", LETTERS[1:5]),
        col = c("red", "blue", "green", "orange", "black"),
        lty = 1)
 ```
