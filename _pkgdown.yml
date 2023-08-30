@@ -1,0 +1,35 @@
+url: https://lukece.github.io/CoDaImpact/
+template:
+  bootstrap: 5
+
+
+destination: docs
+
+reference:
+- title: "lmCoDa"
+- subtitle: "Construtors"
+  contents:
+  - lmCoDa
+  - ToSimplex
+- subtitle: "Tools for interpretation"
+  contents:
+  - VariationTable
+  - VariationScenario
+  - ShareRatioElasticities
+  - Impacts
+- subtitle: "Other methods"
+  contents:
+  - coef.lmCoDa
+  - confint.lmCoDa
+  - fitted.lmCoDa
+  - predict.lmCoDa
+  - residuals.lmCoDa
+- title: "Other functions"
+  contents:
+  - CoDa_seq
+  - CoDa_path
+- title: "Package data"
+  contents:
+  - car_market
+  - election
+  - rice_yields

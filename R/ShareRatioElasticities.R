@@ -68,22 +68,17 @@ ShareRatioElasticities <- function(
 
   stopifnot(is(object, "lmCoDa"),
             is.character(Xvar) && length(Xvar) == 1,
-            is.character(Xdir) || is.numeric(Xdir) || is.null(Xdir))
+            is.null(Xdir) || is.character(Xdir) || is.numeric(Xdir))
 
-  check <- "Xvar musst be one varible name among %s!"
   trSry <- object$trSry
-  Xcomp_names <- names(Filter(function(x) x>=1, trSry$D[-1]))
-  Xcomp_names <- unlist(trSry$NAME_SIMPLEX[Xcomp_names])
-  if (!Xvar %in% Xcomp_names) stop(sprintf(check , list(Xcomp_names)))
+  Xpos <- check_Xvar(Xvar, trSry, "pos")
 
   check <- "Share ratio elasticities are only meaningful when X and Y are compositional!"
-  Xpos <- which(unlist(trSry$NAME_SIMPLEX) == Xvar)
   Dx <- trSry$D[[Xpos]]
   Dy <- trSry$D[[1]]
   if (Dx == 0 || Dy == 0) stop(check)
 
-
-  # allocate for result in vectorized form
+  # allocate for results in vectorized form
   resX  <- expand.grid(Xj = seq(Dx), Xl = seq(Dx))
   resY  <- expand.grid(Yj = seq(Dy), Yl = seq(Dy))
   resXY <- merge(resY[resY$Yj != resY$Yl,], resX[resX$Xj != resX$Xl,])
