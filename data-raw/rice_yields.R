@@ -49,7 +49,7 @@ rename_cols <- c(
   "histc" = "TEMPERATURES")
 rice_yields <- rice_yields[,names(rename_cols)]
 names(rice_yields) <- rename_cols
-colnames(rice_yields$TEMPERATURES) <- c("LOW","MIDDLE","HIGH")
+colnames(rice_yields$TEMPERATURES) <- c("LOW","MEDIUM","HIGH")
 
 # export
 usethis::use_data(rice_yields,overwrite = TRUE)

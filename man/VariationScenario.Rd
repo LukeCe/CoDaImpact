@@ -53,7 +53,7 @@ The corresponding changes in Y are computed with the prediction formula, where w
 
 # ---- model with scalar response ----
 res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
-VariationScenario(res, Xvar = "TEMPERATURES", Xdir = "MIDDLE", n_steps = 5)
+VariationScenario(res, Xvar = "TEMPERATURES", Xdir = "MEDIUM", n_steps = 5)
 VariationScenario(res, Xvar = "PRECIPITATION", n_steps = 5)
 
 

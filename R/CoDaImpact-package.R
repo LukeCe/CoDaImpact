@@ -24,7 +24,7 @@ NULL
 #'   +  `TEMPERATURES`: a compositional variable represented as a matrix \cr
 #'       whose columns correspond to the proportion of days in a year where the maximal
 #'       temperature (in Celsius degrees) falls into one of the three categories:
-#'       "LOW" ([-6,25.1]), "MIDDLE" ([25.1,35.4])  and "HIGH" ([35.4,45]).
+#'       "LOW" ([-6,25.1]), "MEDIUM" ([25.1,35.4])  and "HIGH" ([35.4,45]).
 #'
 #' @references
 #'   Thi-Huong Trinh, Michel Simioni, and Christine Thomas-Agnan,

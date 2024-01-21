@@ -25,13 +25,13 @@ expect_equal({
 expect_equal({
   res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
   list(
-    VariationScenario(res, "TEMPERATURES", Xdir = "MIDDLE", n_steps = 5, add_opposite = FALSE),
+    VariationScenario(res, "TEMPERATURES", Xdir = "MEDIUM", n_steps = 5, add_opposite = FALSE),
     VariationScenario(res, "PRECIPITATION", n_steps = 5, add_opposite = FALSE))
 },
 {
   res <- lmCoDa(YIELD ~ PRECIPITATION + alr(TEMPERATURES), data = head(rice_yields,20))
   list(
-    VariationScenario(res, "TEMPERATURES", Xdir = "MIDDLE", n_steps = 5, add_opposite = FALSE),
+    VariationScenario(res, "TEMPERATURES", Xdir = "MEDIUM", n_steps = 5, add_opposite = FALSE),
     VariationScenario(res, "PRECIPITATION", n_steps = 5, add_opposite = FALSE))
 },info = "Y scalar & (X compo + X scalar)")
 

@@ -25,6 +25,6 @@ expect_error(Impacts(res, Xvar = "PRECIPITATION"), pattern = "Impacts")
 
 expect_equal(
   Impacts(res, Xvar = "TEMPERATURES",obs =  10)*0, {
-    res0 <- matrix(0,3,1,dimnames = list(c("LOW", "MIDDLE", "HIGH"), c("YIELD")))
+    res0 <- matrix(0,3,1,dimnames = list(c("LOW", "MEDIUM", "HIGH"), c("YIELD")))
     res0})
 

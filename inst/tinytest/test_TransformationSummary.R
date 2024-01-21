@@ -35,7 +35,7 @@ expect_equal({
   whichTrans(tt["alr(TEMPERATURES)"])
 }, {
   F_alr <- cbind(diag(2),-1L)
-  dimnames(F_alr) <- list(c("alr(TEMPERATURES)1", "alr(TEMPERATURES)2"),c("LOW","MIDDLE","HIGH"))
+  dimnames(F_alr) <- list(c("alr(TEMPERATURES)1", "alr(TEMPERATURES)2"),c("LOW","MEDIUM","HIGH"))
   K_alr <- clrBase(3)[,-3]
   dimnames(K_alr) <- dimnames(t(F_alr))
   list("name" = "alr", "base_F" = F_alr, "base_K" = K_alr)
