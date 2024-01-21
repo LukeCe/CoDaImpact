@@ -53,8 +53,6 @@
 #' confint(res, "unemp_rate")
 #' # CI for difference in clr parameters (coincides with difference in the semi elasticity)
 #' confint(res, "unemp_rate", y_ref = 1)
-#' # CI for the observation dependent elasticity
-#' confint(res, "unemp_rate", obs = 1)
 #'
 #' ## ---- CI for compositional X
 #' # CI for clr parameters
@@ -63,8 +61,6 @@
 #' # CI for difference in clr parameters (coincides with difference in the elasticity)
 #' confint(res, "cbind(Age_1839, Age_4064)", y_ref = 1)
 #'
-#' # CI for the observation dependent elasticity
-#' confint(res, "cbind(Age_1839, Age_4064)", obs = 1)
 #'
 confint.lmCoDa <- function(
     object,
@@ -149,28 +145,8 @@ confint.lmCoDa <- function(
 
 
   if (elast_intervals) {
-    Y0 <- as(fitted(object, "simplex")[obs,], "matrix")
-    Dy <- length(Y0)
-    Wz <- diag(Dy) - Y0[rep(1,Dy),]
-
-    est_elast <- Wz %*% est_coef
-    vcov_elast <- Wz %*% vcov_y %*% t(Wz)
-    sd_elasti <- lapply(sqrt(diag(vcov_x)), "*", sqrt(diag(vcov_elast)))
-    sd_elasti <- t(t(do.call("cbind", sd_elasti)))
-
-    result <- vector("list", length = ncol(est_elast))
-    for (i in seq_along(result)) {
-      result[[i]] <- data.frame(
-        "Y"   = colnames(vcov_y),
-        "X"   = colnames(est_coef)[i],
-        "est" = est_elast[,i],
-        "sd"  = sd_elasti[,i],
-        "qLo" = sd_elasti[,i] * qlevel[1] + est_elast[,i],
-        "qHi" = sd_elasti[,i] * qlevel[2] + est_elast[,i],row.names = NULL)
+    stop("CI for observation dependent elastities is not yet implemented!") #...
+    # ....it would require a Monte Carlo approach
+    # ....or an approximation by Delta method might work too
     }
-    result <- Reduce("rbind", result)
-    colnames(result) <- c("Y","X","IMPACT","SD", pct(a))
-    attr(result, "type") <- "CI for observation dependent impacts"
-    return(result)
-  }
 }

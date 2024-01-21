@@ -4,14 +4,15 @@
 \name{CoDaImpact-package}
 \alias{CoDaImpact}
 \alias{CoDaImpact-package}
-\title{CoDaImpact: Tools for interpreting compositional regression}
+\title{CoDaImpact: Tools for interpreting CoDa regression models}
 \description{
-The package implements elasticities for interpreting CoDa regression models in the simplex. It is designed as an add-on to the composition package and its ecosystem.
+The CoDaImpact package implements additional tools for interpreting the results of CoDa regression models and is designed as an extension of the compositions package and its ecosystem. Our additional interpretation tools comprise variation scenarios, elasticities, elasticity differences and pairwise share-ratios increments. These tools have the advantage of being independent of log-ratio transformations and allow an interpretation in the original space of shares (for more details see Dargel and Thomas-Agnan (2023) \url{https://www.tse-fr.eu/publications/share-ratio-interpretations-compositional-regression-models}).
 }
 \seealso{
 Useful links:
 \itemize{
   \item \url{https://github.com/LukeCe/CoDaImpact}
+  \item \url{https://lukece.github.io/CoDaImpact/}
   \item Report bugs at \url{https://github.com/LukeCe/CoDaImpact/issues}
 }
 

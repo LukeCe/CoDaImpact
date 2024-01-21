@@ -60,16 +60,10 @@ res <- lmCoDa(
     ilr(cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)) +
     unemp_rate, data = election[1:20,])
 
-expect_equivalent({
-  ci <- confint(res,parm = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", obs = 1)
-  sum(ci$IMPACT)}, 0, info = "Y compo - X compo")
+expect_error({
+  ci <- confint(res,parm = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", obs = 1)},
+  pattern = "implemenented")
+# expect_equivalent({
+#   ci <- confint(res,parm = "unemp_rate", obs = 10)
+#   sum(ci$IMPACT)}, 0, info = "Y compo - X scalar")
 
-expect_equivalent({
-  ci <- confint(res,parm = "unemp_rate", obs = 10)
-  sum(ci$IMPACT)}, 0, info = "Y compo - X scalar")
-
-# Y scalar
-res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields, 20))
-expect_equal(
-  confint(res,parm = "TEMPERATURES", obs = 10),
-  confint(res,parm = "TEMPERATURES"))

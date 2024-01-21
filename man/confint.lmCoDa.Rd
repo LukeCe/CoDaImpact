@@ -61,8 +61,6 @@ res <- lmCoDa(
 confint(res, "unemp_rate")
 # CI for difference in clr parameters (coincides with difference in the semi elasticity)
 confint(res, "unemp_rate", y_ref = 1)
-# CI for the observation dependent elasticity
-confint(res, "unemp_rate", obs = 1)
 
 ## ---- CI for compositional X
 # CI for clr parameters
@@ -71,8 +69,6 @@ confint(res, "cbind(Age_1839, Age_4064)")
 # CI for difference in clr parameters (coincides with difference in the elasticity)
 confint(res, "cbind(Age_1839, Age_4064)", y_ref = 1)
 
-# CI for the observation dependent elasticity
-confint(res, "cbind(Age_1839, Age_4064)", obs = 1)
 
 }
 \references{

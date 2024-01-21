@@ -82,6 +82,47 @@ ToSimplex <- function(object){
 
 
 # ---- methods ----------------------------------------------------------------
+#' @inherit predict.lmCoDa title description details params
+#' @param split logical, if `TRUE` the coefficients are reported as a list instead
+#'   of a matrix, where list structure reflects the explanatory variables of the model
+#' @param ... not used
+#' @return a matrix
+#'
+#' @author Lukas Dargel
+#' @exportS3Method
+coef.lmCoDa <- function(object, space = NULL, split = FALSE, ...) {
+  stopifnot(is.null(space) || space %in% c("clr", "simplex"))
+  type <- if (is.null(space)) "COEF_COORD" else c("clr" = "COEF_CLR", "simplex" = "COEF_SIMPLEX")[space]
+  cfs <- object$trSry[[type]][-1]
+  cfs <- if (split) cfs else Reduce("rbind", cfs)
+  return(cfs)
+}
+
+
+#' @inherit predict.lmCoDa title description details params
+#' @return matrix or vector
+#' @importFrom stats fitted
+#' @author Lukas Dargel
+#' @exportS3Method
+fitted.lmCoDa <- function(object, space = NULL, ...) {
+
+  stopifnot(is.null(space) || space %in% c("clr", "simplex"))
+  fity <- object$fitted.values
+  if (is.null(space))
+    return(fity)
+
+  Ky <- object$trSry[["LR_BASE_K"]][[1]]
+  if (length(Ky) == 0)
+    stop("The space argument can only be used for Y compositional models!")
+
+  if (space == "simplex")
+    return(attr(fity, "orig"))
+
+  if (space == "clr")
+    return(fity %*% t(Ky))
+}
+
+
 #' Predictions, fitted values, residuals, and coefficients in CoDa models
 #'
 #' These functions work as in the usual lm object.
@@ -132,46 +173,4 @@ residuals.lmCoDa <- function(object, space = NULL, ...) {
 
   if (space == "clr")
     return(resi %*% t(Ky))
-}
-
-
-#' @inherit predict.lmCoDa title description details params
-#' @return matrix or vector
-#' @importFrom stats fitted
-#' @author Lukas Dargel
-#' @exportS3Method
-fitted.lmCoDa <- function(object, space = NULL, ...) {
-
-  stopifnot(is.null(space) || space %in% c("clr", "simplex"))
-  fity <- object$fitted.values
-  if (is.null(space))
-    return(fity)
-
-  Ky <- object$trSry[["LR_BASE_K"]][[1]]
-  if (length(Ky) == 0)
-    stop("The space argument can only be used for Y compositional models!")
-
-  if (space == "simplex")
-    return(attr(fity, "orig"))
-
-  if (space == "clr")
-    return(fity %*% t(Ky))
-}
-
-
-
-#' @inherit predict.lmCoDa title description details params
-#' @param separate logical, if `TRUE` the coefficients are reported as a list instead
-#'   of a matrix, where list structure reflects the explanatory variables of the model
-#' @param ... not used
-#' @return a matrix
-#'
-#' @author Lukas Dargel
-#' @exportS3Method
-coef.lmCoDa <- function(object, space = NULL, separate = FALSE, ...) {
-  stopifnot(is.null(space) || space %in% c("clr", "simplex"))
-  type <- if (is.null(space)) "COEF_COORD" else c("clr" = "COEF_CLR", "simplex" = "COEF_SIMPLEX")[space]
-  cfs <- object$trSry[[type]][-1]
-  cfs <- if (separate) cfs else Reduce("rbind", cfs)
-  return(cfs)
 }

@@ -4,7 +4,7 @@
 \alias{coef.lmCoDa}
 \title{Predictions, fitted values, residuals, and coefficients in CoDa models}
 \usage{
-\method{coef}{lmCoDa}(object, space = NULL, separate = FALSE, ...)
+\method{coef}{lmCoDa}(object, space = NULL, split = FALSE, ...)
 }
 \arguments{
 \item{object}{class "lmCoDa"}
@@ -12,7 +12,7 @@
 \item{space}{a character indicating in which space the prediction should
 be returned. Supported are the options \code{c("clr", "simplex")}.}
 
-\item{separate}{logical, if \code{TRUE} the coefficients are reported as a list instead
+\item{split}{logical, if \code{TRUE} the coefficients are reported as a list instead
 of a matrix, where list structure reflects the explanatory variables of the model}
 
 \item{...}{not used}

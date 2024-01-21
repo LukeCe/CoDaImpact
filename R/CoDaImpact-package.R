@@ -9,8 +9,8 @@ NULL
 
 # ---- Data Documentation ---------------------------------------------------------------
 
-
-#' Rice yiled data  in the Vietnamese provinces
+# ... Rice yield ----
+#' Data on the rice yields in the Vietnamese provinces
 #'
 #' @description
 #' The data is presented in  Trinh et al. (2023) for studying the impact
@@ -37,6 +37,7 @@ NULL
 #' @keywords data
 "rice_yields"
 
+# ... Elections ----
 #' Results of french departmental elections in 2015
 #'
 #' The data is used by Nguyen et. al (2020) and originally disseminated by the
@@ -66,6 +67,7 @@ NULL
 "election"
 
 
+# ... Car market ----
 #' French car market data
 #'
 #' This data set shows monthly data of the French car market between 2003 and 2015.
@@ -93,6 +95,36 @@ NULL
 #' @name car_market
 "car_market"
 
+
+# ... Toulouse retails ----
+#' Simulated retail data for nine shopping malls in the city of Toulouse
+#'
+#' This data set provides an example for the use of CoDa models in geomarketing applications.
+#' The data is simulated, but realistic in the sense that the parameters used for the simulation
+#' were estimated on a real, but confidential data set (Dargel and Thomas-Agnan 2023).
+#'
+#' @details
+#'   + `ID_IRIS`: Identifies the geographic region.
+#'   + `POP`: Population number within the region
+#'   + `MEDIAN_INCOME`: The median income in the region
+#'   + `dist_km`: Distances from the region to all nine shopping malls.
+#'   + `visits`: The share of visitors that coming from the region and going to each of the malls.
+#'   + `geometry`: The geometry (polygon) of the region
+#'   + The "mall_locations" and the "simulation_parameters" are given as additional attributes.
+#'
+#' @source
+#'   + The figures for `POP` and `MEDIAN_INCOME` come from the [French census data prided by INSEE](https://www.insee.fr/fr/information/4467366).
+#'   + The polygon `geometry` is [provided by the IGN](https://geoservices.ign.fr/contoursiris).
+#'   + The locations of the nine shopping malls around the city center are derived from online mapping services (Google Maps and OpenStreetMap).
+#'   + The distances (`dist_km`) are derived from location information.
+#'   + The number of shopping trips (`visits`) are simulated by the authors.
+#' @references
+#'    Lukas Dargel, and Christine Thomas-Agnan, “The link between multiplicative competitive interaction models and compositional data regression with a total”, TSE Working Paper, n. 23-1455, July 2023.
+#' @author Lukas Dargel, Christine Thomas-Agnan
+#' @docType data
+#' @keywords data
+#' @name toulouse_retail
+"toulouse_retail"
 
 # ---- Reexports from package compositions ---------------------------------------------
 #' @importFrom compositions alr
