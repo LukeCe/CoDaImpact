@@ -75,6 +75,8 @@ VariationTable <- function(
   # define elasticities
   elasti <- Impacts(object, trSry$NAME_SIMPLEX[[Xvar]], obs)
 
+
+  if (scalar_x & !is.null(inc_rate)) warning("The argument inc_rate is ignored when X is a classical variable!")
   if (!scalar_x) {
     # for compositional X we need to account for the direction in which X changes
     vertex_dir <- is.character(Xdir)
