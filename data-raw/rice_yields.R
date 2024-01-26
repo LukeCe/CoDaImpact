@@ -1,6 +1,12 @@
 library("compositions")
 library("here")
 
+load(here("data/rice_yields.rda"))
+colnames(rice_yields$TEMPERATURES) <- c("LOW", "MEDIUM", "HIGH")
+usethis::use_data(rice_yields,overwrite = TRUE)
+
+
+stop("Do not use old files...")
 # data from unpublished article by Christine-Thomas et al (2023)
 load(here("data-raw/data.ILR.Reg.RDATA"))
 #############

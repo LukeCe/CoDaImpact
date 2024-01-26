@@ -13,7 +13,7 @@ expect_equal(
   res0})
 
 expect_equal(
-  Impacts.lmCoDa(res, Xvar =  "unemp_rate",obs =  10)*0, {
+  Impacts(res, Xvar =  "unemp_rate",obs =  10)*0, {
   res0 <- matrix(0,1,3,dimnames = list(c("unemp_rate"), c("left", "right", "extreme_right")))
   attr(res0, "obs") <- 10
   res0})

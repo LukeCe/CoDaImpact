@@ -62,7 +62,7 @@ res <- lmCoDa(
 
 expect_error({
   ci <- confint(res,parm = "cbind(Educ_BeforeHighschool, Educ_Highschool, Educ_Higher)", obs = 1)},
-  pattern = "implemenented")
+  pattern = "implemented")
 # expect_equivalent({
 #   ci <- confint(res,parm = "unemp_rate", obs = 10)
 #   sum(ci$IMPACT)}, 0, info = "Y compo - X scalar")

@@ -1,24 +1,25 @@
 ---
-title: "CoDaImpact"
+title: "Getting started with CoDaImpact"
 author:
-- "THOMAS-AGNAN Christine"
-- "DARGEL Lukas"
-- "NASR Rodrigue"
-date: "2023-08-19"
-output:
-  pdf_document:
-    toc: yes
-    number_sections: true
-  html_document:
+  - "Christine Thomas-Agnan"
+  - "Lukas Dargel"
+  - "Rodrigue Nasr "
+output: 
+  rmarkdown::html_vignette:
     toc: yes
     pn: no
     number_sections: true
+vignette: >
+  %\VignetteIndexEntry{Getting started with CoDaImpact}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup0, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, error = TRUE)
 options(scipen = 999)
 ```
+
 # Introduction
 
 **CoDaImpact** is a package for the analysis of covariate impacts in compositional regression models.
