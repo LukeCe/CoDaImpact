@@ -34,6 +34,7 @@ coincide with the difference in elasticities."><!-- mathjax --><script src="http
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Vignette.html">Getting started with CoDaImpact</a>
     <a class="dropdown-item" href="../articles/paper_Share_Ratio.html">“Pairwise share-ratio interpretations of compositional regression models”</a>
   </div>
 </li>
@@ -154,12 +155,6 @@ intervals.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  left          left unemp_rate   0.000000 0.000000   0.00000  0.00000</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  left         right unemp_rate -14.144230 9.405060 -34.19064  5.90218</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 3  left extreme_right unemp_rate   8.432251 8.825213 -10.37824 27.24275</span>
-<span class="r-in"><span><span class="co"># CI for the observation dependent elasticity</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">res</span>, <span class="st">"unemp_rate"</span>, obs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               Y          X     IMPACT       SD       2.5 %    97.5 %</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          left unemp_rate   1.903993 5.473901  -9.7633504 13.571336</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         right unemp_rate -12.240237 5.000438 -22.8984177 -1.582056</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 extreme_right unemp_rate  10.336244 4.634737   0.4575352 20.214953</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co">## ---- CI for compositional X</span></span></span>
 <span class="r-in"><span><span class="co"># CI for clr parameters</span></span></span>
@@ -182,15 +177,6 @@ intervals.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  left         right Age_4064  0.2210267 1.577140 -3.140568 3.582621</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  left extreme_right Age_4064  1.0139600 1.479905 -2.140384 4.168304</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># CI for the observation dependent elasticity</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">res</span>, <span class="st">"cbind(Age_1839, Age_4064)"</span>, obs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>               Y        X     IMPACT        SD     2.5 %   97.5 %</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1          left Age_1839  0.4116622 0.9179218 -1.544842 2.368166</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2         right Age_1839  0.1906355 0.8385265 -1.596641 1.977912</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 extreme_right Age_1839 -0.6022978 0.7772020 -2.258865 1.054269</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4          left Age_4064 -0.4116622 0.9179218 -2.368166 1.544842</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5         right Age_4064 -0.1906355 0.8385265 -1.977912 1.596641</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 extreme_right Age_4064  0.6022978 0.7772020 -1.054269 2.258865</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

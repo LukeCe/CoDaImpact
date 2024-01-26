@@ -28,6 +28,7 @@ When the changing explanatory variable is compositional the term "linear" is und
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/Vignette.html">Getting started with CoDaImpact</a>
     <a class="dropdown-item" href="../articles/paper_Share_Ratio.html">“Pairwise share-ratio interpretations of compositional regression models”</a>
   </div>
 </li>
@@ -135,8 +136,8 @@ The corresponding changes in Y are computed with the prediction formula, where w
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># ---- model with scalar response ----</span></span></span>
 <span class="r-in"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="lmCoDa.html">lmCoDa</a></span><span class="op">(</span><span class="va">YIELD</span> <span class="op">~</span> <span class="va">PRECIPITATION</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/ilr.html" class="external-link">ilr</a></span><span class="op">(</span><span class="va">TEMPERATURES</span><span class="op">)</span>, data <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rice_yields</span>,<span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">VariationScenario</span><span class="op">(</span><span class="va">res</span>, Xvar <span class="op">=</span> <span class="st">"TEMPERATURES"</span>, Xdir <span class="op">=</span> <span class="st">"MIDDLE"</span>, n_steps <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       YIELD        X.LOW     X.MIDDLE       X.HIGH</span>
+<span class="r-in"><span><span class="fu">VariationScenario</span><span class="op">(</span><span class="va">res</span>, Xvar <span class="op">=</span> <span class="st">"TEMPERATURES"</span>, Xdir <span class="op">=</span> <span class="st">"MEDIUM"</span>, n_steps <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       YIELD        X.LOW     X.MEDIUM       X.HIGH</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -5 2.781911 5.360699e-07 9.314607e-01 6.853880e-02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -4 2.769875 4.780533e-07 9.388784e-01 6.112112e-02</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> -3 2.757840 4.259484e-07 9.455403e-01 5.445930e-02</span>
