@@ -11,19 +11,19 @@ An object of class \code{data.frame} with 1890 rows and 6 columns.
 rice_yields
 }
 \description{
-The data is used in the article by (Huong et al. 2023), who study the impact
-of climate change on the rice production in Vietnam. \cr
+The data is presented in  Trinh et al. (2023) for studying the impact
+of climate change on  rice production in Vietnam. \cr
 It contains the following information:
 \itemize{
 \item \code{PROVINCE}: a factor for the 63 provinces of Vietnam
 \item \code{REGION}: a factor with the 6 main regions
 \item \code{YEAR}: a numeric corresponding to the year
-\item \code{YIELD}: a numeric for the rice production in tonnes per hectare
+\item \code{YIELD}: a numeric for the rice production in tons per hectare
 \item \code{PRECIPITATION}: a numeric for the annual precipitation in liters
 \item \code{TEMPERATURES}: a compositional variable represented as a matrix \cr
-It corresponding to the fraction of days in a year where the maximal
-temperature falls into one of the three categories,
-"LOW", "MEDIUM" and "HIGH".
+whose columns correspond to the proportion of days in a year where the maximal
+temperature (in Celsius degrees) falls into one of the three categories:
+"LOW" (\link{-6,25.1}), "MEDIUM" (\link{25.1,35.4})  and "HIGH" (\link{35.4,45}).
 }
 }
 \references{
