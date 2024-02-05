@@ -57,7 +57,7 @@ NULL
 #'
 #' @source
 #'   - https://www.data.gouv.fr/fr/datasets/elections-departementales-2015-resultats-par-bureaux-de-vote
-#'   - https://www.insee.fr
+#'   - https://www.insee.fr/
 #' @references
 #'   Nguyen THA, Laurent T, Thomas-Agnan C, Ruiz-Gazen A. Analyzing the impacts of socio-economic factors on French departmental elections with CoDa methods. J Appl Stat. 2020 Dec 9;49(5):1235-1251. doi: 10.1080/02664763.2020.1858274. PMID: 35707505; PMCID: PMC9041641.
 #' @author Lukas Dargel, Christine Thomas-Agnan
