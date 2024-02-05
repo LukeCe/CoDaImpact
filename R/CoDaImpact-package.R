@@ -77,7 +77,7 @@ NULL
 #' @details
 #'   + `SEG_`: Corresponds to the shares of sales in each of the five market
 #'     segments A,B,C,D and E. Where A are the smallest cars and E the largest.
-#'     The segmentation is explained in [wikipedia](https://en.wikipedia.org/wiki/Car_classification).
+#'     The segmentation is explained in [Wikipedia](https://en.wikipedia.org/wiki/Car_classification).
 #'   + `GDP`: GDP figures in millions at current prices
 #'   + `HOUSEHOLD_EXPENDITURE`: total household expenditure in millions at previous years prices
 #'   + `GAS_PRICE`: Corresponds to the gas price including VAT.

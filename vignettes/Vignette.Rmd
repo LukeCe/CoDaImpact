@@ -142,7 +142,7 @@ For a compositional explanatory variable the option `space` allows choosing betw
 ```{r}
 coef(fit_X_compo,space = "simplex")
 coef(fit_X_compo,space = "clr")
-coef(fit_X_compo) # by default use the logratio of the estimation, here alr
+coef(fit_X_compo) # by default use the log-ratio of the estimation, here alr
 ```
 
 ##### fitted
@@ -514,7 +514,7 @@ election$AGE  <- as.matrix(election[,c("Age_1839","Age_4064","Age_65plus")])
 election$EDUC <- as.matrix(election[,c("Educ_BeforeHighschool","Educ_Highschool","Educ_Higher")])
 ```
 
-The next step consists of applying a logratio transformation (alr or ilr) to the compositional variables and then using the "lm" function to perform regression in coordinates space. 
+The next step consists of applying a log-ratio transformation (alr or ilr) to the compositional variables and then using the "lm" function to perform regression in coordinates space. 
 In this example, the response variable, `VOTE`, is transformed by an ilr, the variable `Age` is transformed by an alr, and `EDUC` is transformed by an ilr. 
 
 ```{r}

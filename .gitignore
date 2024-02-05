@@ -9,3 +9,4 @@ data-raw/*
 !data-raw/*.R
 inst/doc
 docs
+cran-comments.md

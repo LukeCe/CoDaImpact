@@ -37,8 +37,8 @@ check_Xdir <- function(Xdir, Xopts, normalize = FALSE) {
 
 #' Internal: check for valid name of Xvar
 #'
-#' Users should always specify Xvar as "NAME_SIMLEX",
-#' which means before logratio transformations.
+#' Users should always specify Xvar as "NAME_SIMPLEX",
+#' which means before log-ratio transformations.
 #'
 #' @param Xvar a character or numeric indicating the direction
 #' @param trSry a character indicating the names of the vertices
