@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">CoDaImpact</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.0.0.9001</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -127,19 +127,7 @@ for now and should be released on CRAN later on.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># remotes::install_github("LukeCe/CoDaImpact")</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/LukeCe/CoDaImpact" class="external-link">CoDaImpact</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stat.boogaart.de/compositions/" class="external-link">compositions</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in library(ggplot2): there is no package called 'ggplot2'</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">RColorBrewer</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in library(RColorBrewer): there is no package called 'RColorBrewer'</span></span></code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-spatial.github.io/classInt/" class="external-link">classInt</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://jacolienvanrij.com/tutorials.html" class="external-link">plotfunctions</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in library(plotfunctions): there is no package called 'plotfunctions'</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://patchwork.data-imaginist.com" class="external-link">patchwork</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in library(patchwork): there is no package called 'patchwork'</span></span></code></pre>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://www.stat.boogaart.de/compositions/" class="external-link">compositions</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="scalar-on-composition-regression">Scalar on composition regression<a class="anchor" aria-label="anchor" href="#scalar-on-composition-regression"></a>
@@ -161,7 +149,7 @@ we group the temperatures in three classes <code>LOW</code> ([-6,25.1]),
 precipitation data come from the project “Asian
 Precipitation-Highly-Resolved Observational Data Integration Towards
 Evaluation (APHRODITE)”.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">rice_yields</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##           PROVINCE                                        REGION   </span></span>
 <span><span class="co">##  ANGIANG      :  30   Central Highlands                      :180  </span></span>
@@ -189,28 +177,38 @@ Evaluation (APHRODITE)”.</p>
 <span><span class="co">## </span></span></code></pre>
 <p>The following plot is a ternary diagram of maximum temperature
 colored according to rice yield.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">yield_color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/classInt/reference/classIntervals.html" class="external-link">classIntervals</a></span><span class="op">(</span></span>
-<span>  <span class="va">rice_yields</span><span class="op">$</span><span class="va">YIELD</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span>, n <span class="op">=</span> <span class="fl">9</span>,</span>
-<span>  style <span class="op">=</span> <span class="st">"quantile"</span>, intervalClosure <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
-<span><span class="va">yield_color</span> <span class="op">&lt;-</span> <span class="fu">brewer.pal</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span>, name <span class="op">=</span> <span class="st">"OrRd"</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://r-spatial.github.io/classInt/reference/findCols.html" class="external-link">findCols</a></span><span class="op">(</span><span class="va">yield_color</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in brewer.pal(n = 9, name = "OrRd"): could not find function "brewer.pal"</span></span></code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/acomp.html" class="external-link">acomp</a></span><span class="op">(</span><span class="va">rice_yields</span><span class="op">$</span><span class="va">TEMPERATURES</span><span class="op">)</span>,</span>
-<span>     col <span class="op">=</span> <span class="va">yield_color</span>,</span>
-<span>     pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in plot.xy(xy.coords(x, y), type = type, ...): supplied color is</span></span>
-<span><span class="co">## neither numeric nor character</span></span>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">whitered_pal</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/colorRamp.html" class="external-link">colorRampPalette</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rev.html" class="external-link">rev</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"beige"</span>,<span class="st">"orange"</span>,<span class="st">"red"</span>,<span class="st">"darkred"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Warning in plot.xy(xy.coords(x, y), type = type, ...): supplied color is</span></span>
-<span><span class="co">## neither numeric nor character</span></span></code></pre>
+<span><span class="va">top100</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">rice_yields</span>, <span class="fl">250</span><span class="op">)</span></span>
+<span><span class="va">whitered_col</span> <span class="op">&lt;-</span> <span class="fu">whitered_pal</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">top_100</span><span class="op">$</span><span class="va">YIELD</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'top_100' not found</span></span></code></pre>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">yield_top100</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="va">top_100</span><span class="op">$</span><span class="va">YIELD</span>,ties.method <span class="op">=</span> <span class="st">"first"</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'top_100' not found</span></span></code></pre>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">ylcol_top100</span> <span class="op">&lt;-</span> <span class="va">whitered_col</span><span class="op">[</span><span class="va">yield_top100</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'whitered_col' not found</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/layout.html" class="external-link">layout</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>,ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span>, width <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>,height <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/acomp.html" class="external-link">acomp</a></span><span class="op">(</span><span class="va">top_100</span><span class="op">$</span><span class="va">TEMPERATURES</span><span class="op">)</span>,</span>
+<span>     col <span class="op">=</span> <span class="va">ylcol_top100</span>,</span>
+<span>     pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'top_100' not found</span></span></code></pre>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">legend_image</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/grDevices/as.raster.html" class="external-link">as.raster</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu">whitered_pal</span><span class="op">(</span><span class="fl">20</span><span class="op">)</span>, ncol<span class="op">=</span><span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">2</span><span class="op">)</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>,type <span class="op">=</span> <span class="st">'n'</span>, axes <span class="op">=</span> <span class="cn">F</span>,xlab <span class="op">=</span> <span class="st">''</span>, ylab <span class="op">=</span> <span class="st">''</span>, main <span class="op">=</span> <span class="st">'Rice yield'</span><span class="op">)</span></span>
+<span><span class="va">yield_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/range.html" class="external-link">range</a></span><span class="op">(</span><span class="va">top_100</span><span class="op">$</span><span class="va">YIELD</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'top_100' not found</span></span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">yield_range</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">min</a></span><span class="op">(</span><span class="va">yield_range</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/Extremes.html" class="external-link">max</a></span><span class="op">(</span><span class="va">yield_range</span><span class="op">)</span>, l <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'yield_range' not found</span></span></code></pre>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/text.html" class="external-link">text</a></span><span class="op">(</span>x<span class="op">=</span><span class="fl">1.5</span>, y <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span>,l<span class="op">=</span><span class="fl">5</span><span class="op">)</span>, labels <span class="op">=</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">yield_range</span>,<span class="fl">1</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'yield_range' not found</span></span></code></pre>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/rasterImage.html" class="external-link">rasterImage</a></span><span class="op">(</span><span class="va">legend_image</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>,<span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vignette_files/figure-html/unnamed-chunk-2-1.png" width="700"></p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">gradientLegend</span><span class="op">(</span><span class="va">rice_yields</span><span class="op">$</span><span class="va">YIELD</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">]</span>,</span>
-<span>               col<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sort.html" class="external-link">sort</a></span><span class="op">(</span><span class="va">yield_color</span>, decreasing <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>               nCol <span class="op">=</span> <span class="fl">9</span>, dec <span class="op">=</span> <span class="fl">1</span>, length <span class="op">=</span><span class="fl">0.4</span>, depth <span class="op">=</span> <span class="fl">0.1</span>, inside <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>               fit.margin <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in gradientLegend(rice_yields$YIELD[1:100], col = sort(yield_color, : could not find function "gradientLegend"</span></span></code></pre>
 </div>
 <div class="section level3">
 <h3 id="regression-step-with-the-compositions-package">Regression step with the <strong>compositions</strong> package<a class="anchor" aria-label="anchor" href="#regression-step-with-the-compositions-package"></a>
@@ -221,7 +219,7 @@ have to store our data in a data.frame in such a way that scalar
 variables are column vectors and compositional variables are matrices.
 In our dataset, the <code>TEMPERATURES</code> variable is already in the
 matrix format.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">sapply</a></span><span class="op">(</span><span class="va">rice_yields</span>, <span class="va">class</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $PROVINCE</span></span>
 <span><span class="co">## [1] "factor"</span></span>
@@ -240,7 +238,7 @@ matrix format.</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## $TEMPERATURES</span></span>
 <span><span class="co">## [1] "matrix" "array"</span></span></code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">rice_yields</span><span class="op">$</span><span class="va">TEMPERATURES</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span> <span class="co">#LOW, MEDIUM, and HIGH, are grouped in TEMPERATURES</span></span></code></pre></div>
 <pre><code><span><span class="co">##             LOW          MEDIUM            HIGH </span></span>
 <span><span class="co">## 0.0000002999999 0.9616434547947 0.0383562452054</span></span></code></pre>
@@ -248,20 +246,20 @@ matrix format.</p>
 R and the <strong>compositions</strong> package, in particular, the
 <code><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm()</a></code> function and the <code><a href="https://rdrr.io/pkg/compositions/man/alr.html" class="external-link">alr()</a></code> transformation for
 the <code>TEMPERATURES</code> variable.</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_X_compo</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/lm.html" class="external-link">lm</a></span><span class="op">(</span><span class="va">YIELD</span> <span class="op">~</span> <span class="va">PRECIPITATION</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/alr.html" class="external-link">alr</a></span><span class="op">(</span><span class="va">TEMPERATURES</span><span class="op">)</span>,data <span class="op">=</span> <span class="va">rice_yields</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "lm"</span></span></code></pre>
 <p>In the next step the function <code><a href="../reference/ToSimplex.html">ToSimplex()</a></code> transforms the
 above output into a “lmCoDa” class which serves as the interface between
 the lm-output and the interpretation functions.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_X_compo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/ToSimplex.html">ToSimplex</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "lmCoDa" "lm"</span></span></code></pre>
 <p>The same can be achieved in a single step using the
 <code><a href="../reference/lmCoDa.html">lmCoDa()</a></code> function.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_X_compo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmCoDa.html">lmCoDa</a></span><span class="op">(</span><span class="va">YIELD</span> <span class="op">~</span> <span class="va">PRECIPITATION</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/alr.html" class="external-link">alr</a></span><span class="op">(</span><span class="va">TEMPERATURES</span><span class="op">)</span>,data <span class="op">=</span> <span class="va">rice_yields</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/class.html" class="external-link">class</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "lmCoDa" "lm"</span></span></code></pre>
@@ -272,7 +270,7 @@ the lm-output and the interpretation functions.</p>
 function. For a compositional explanatory variable the option
 <code>space</code> allows choosing between the simplex version, the clr
 version or the coordinate version of the parameters.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_X_compo</span>,space <span class="op">=</span> <span class="st">"simplex"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                   YIELD</span></span>
 <span><span class="co">## (Intercept)   3.5835270</span></span>
@@ -280,7 +278,7 @@ version or the coordinate version of the parameters.</p>
 <span><span class="co">## LOW           0.3338069</span></span>
 <span><span class="co">## MEDIUM        0.3413303</span></span>
 <span><span class="co">## HIGH          0.3248628</span></span></code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_X_compo</span>,space <span class="op">=</span> <span class="st">"clr"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                      YIELD</span></span>
 <span><span class="co">## (Intercept)    3.583526963</span></span>
@@ -288,8 +286,8 @@ version or the coordinate version of the parameters.</p>
 <span><span class="co">## LOW            0.001623843</span></span>
 <span><span class="co">## MEDIUM         0.023911877</span></span>
 <span><span class="co">## HIGH          -0.025535720</span></span></code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span> <span class="co"># by default use the logratio of the estimation, here alr</span></span></code></pre></div>
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span> <span class="co"># by default use the log-ratio of the estimation, here alr</span></span></code></pre></div>
 <pre><code><span><span class="co">##                               YIELD</span></span>
 <span><span class="co">## (Intercept)             3.583526963</span></span>
 <span><span class="co">## PRECIPITATION           0.252845153</span></span>
@@ -300,7 +298,7 @@ version or the coordinate version of the parameters.</p>
 <h6 id="fitted">fitted<a class="anchor" aria-label="anchor" href="#fitted"></a>
 </h6>
 <p>The <code><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted()</a></code> function retrieves the fitted values.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##        1        2        3        4        5        6 </span></span>
 <span><span class="co">## 3.924848 3.736444 3.948922 4.013668 3.871424 3.952286</span></span></code></pre>
@@ -309,7 +307,7 @@ version or the coordinate version of the parameters.</p>
 <h6 id="residuals">residuals<a class="anchor" aria-label="anchor" href="#residuals"></a>
 </h6>
 <p>The function <code><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">residuals()</a></code> retrieves the residuals.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit_X_compo</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          1          2          3          4          5          6 </span></span>
 <span><span class="co">## -0.5188733 -0.7565444 -1.6756716 -1.6125383 -1.2580224 -1.3394688</span></span></code></pre>
@@ -337,7 +335,7 @@ transform the parameters into the appropriate ilr space, which is
 defined by the contrast matrix. The <code><a href="https://rdrr.io/pkg/compositions/man/ilrBase.html" class="external-link">ilrBase()</a></code> function
 without further arguments leads to the principal balance of the last
 component against all others.</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">V_TEMP</span>   <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/ilrBase.html" class="external-link">ilrBase</a></span><span class="op">(</span>D <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span><span class="va">V_TEMP</span></span></code></pre></div>
 <pre><code><span><span class="co">##         [,1]       [,2]</span></span>
@@ -346,15 +344,13 @@ component against all others.</p>
 <span><span class="co">## 3  0.0000000  0.8164966</span></span></code></pre>
 <p>We can use this contrast matrix and the parameters in clr space to
 obtain the ilr parameters.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">clr_TEMP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_X_compo</span>, space <span class="op">=</span> <span class="st">"clr"</span>, separate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[[</span><span class="st">"alr(TEMPERATURES)"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in coef(fit_X_compo, space = "clr", separate = TRUE)[["alr(TEMPERATURES)"]]: subscript out of bounds</span></span></code></pre>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ilr_TEMP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">V_TEMP</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/compositions/man/matmult.html" class="external-link">%*%</a></span> <span class="va">clr_TEMP</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'clr_TEMP' not found</span></span></code></pre>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">ilr_TEMP</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'ilr_TEMP' not found</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">clr_TEMP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_X_compo</span>, space <span class="op">=</span> <span class="st">"clr"</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[[</span><span class="st">"alr(TEMPERATURES)"</span><span class="op">]</span><span class="op">]</span></span>
+<span><span class="va">ilr_TEMP</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">V_TEMP</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/pkg/compositions/man/matmult.html" class="external-link">%*%</a></span> <span class="va">clr_TEMP</span></span>
+<span><span class="va">ilr_TEMP</span></span></code></pre></div>
+<pre><code><span><span class="co">##            YIELD</span></span>
+<span><span class="co">## [1,]  0.01576002</span></span>
+<span><span class="co">## [2,] -0.03127474</span></span></code></pre>
 <p>The interpretation is that an additive increment of one unit in the
 second ilr coordinate leads to an expected decrease in the rice yield by
 0.03 tonnes per hectare. This increment means that the ratio between
@@ -377,9 +373,12 @@ in explanatory compositions can be interpreted.</p>
 <h5 id="interpretation-with-clr-coordinates">Interpretation with clr coordinates<a class="anchor" aria-label="anchor" href="#interpretation-with-clr-coordinates"></a>
 </h5>
 <p>The clr parameter estimates for the temperatures are given by:</p>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">clr_TEMP</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'clr_TEMP' not found</span></span></code></pre>
+<pre><code><span><span class="co">##               YIELD</span></span>
+<span><span class="co">## LOW     0.001623843</span></span>
+<span><span class="co">## MEDIUM  0.023911877</span></span>
+<span><span class="co">## HIGH   -0.025535720</span></span></code></pre>
 <p>We follow Coenders and Pawlovsky-Glahn (2020) but without changing
 the base of the logarithm and the normalization constant. In these
 conditions, the first clr parameter for the level <code>LOW</code> of
@@ -403,7 +402,7 @@ defining the direction of change. We then compute the predicted value of
 variable “TEMPERATURE”, and we predict new values of the response
 variable according to the change in percentage points of this
 vertex.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/VariationScenario.html">VariationScenario</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_X_compo</span>,</span>
 <span>  Xvar <span class="op">=</span> <span class="st">"TEMPERATURES"</span>,</span>
@@ -428,30 +427,20 @@ vertex.</p>
 and a larger number of steps. Below is the ternary diagram showing the
 path in the simplex: the initial point is in black and the other ones
 are colored according to the value of rice yield.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">VS2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/VariationScenario.html">VariationScenario</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_X_compo</span>,</span>
 <span>  Xvar <span class="op">=</span> <span class="st">"TEMPERATURES"</span>,</span>
 <span>  Xdir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0.2</span>, <span class="fl">0.5</span>, <span class="fl">0.3</span><span class="op">)</span>,</span>
-<span>  inc_size <span class="op">=</span> <span class="fl">.2</span>,</span>
-<span>  n_steps <span class="op">=</span> <span class="fl">50</span>,</span>
+<span>  inc_size <span class="op">=</span> <span class="fl">.1</span>,</span>
+<span>  n_steps <span class="op">=</span> <span class="fl">40</span>,</span>
 <span>  add_opposite <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  obs<span class="op">=</span><span class="fl">43</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">yield_color</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r-spatial.github.io/classInt/reference/classIntervals.html" class="external-link">classIntervals</a></span><span class="op">(</span></span>
-<span>  <span class="va">VS2</span><span class="op">$</span><span class="va">YIELD</span>, n <span class="op">=</span> <span class="fl">9</span>,</span>
-<span>  style <span class="op">=</span> <span class="st">"quantile"</span>, intervalClosure <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span>
-<span><span class="va">yield_color</span> <span class="op">&lt;-</span> <span class="fu">brewer.pal</span><span class="op">(</span>n <span class="op">=</span> <span class="fl">9</span>, name <span class="op">=</span> <span class="st">"OrRd"</span><span class="op">)</span><span class="op">[</span><span class="fu"><a href="https://r-spatial.github.io/classInt/reference/findCols.html" class="external-link">findCols</a></span><span class="op">(</span><span class="va">yield_color</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in brewer.pal(n = 9, name = "OrRd"): could not find function "brewer.pal"</span></span></code></pre>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/acomp.html" class="external-link">acomp</a></span><span class="op">(</span><span class="va">VS2</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">yield_color</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Warning in plot.xy(xy.coords(x, y), type = type, ...): supplied color is</span></span>
-<span><span class="co">## neither numeric nor character</span></span>
-<span></span>
-<span><span class="co">## Warning in plot.xy(xy.coords(x, y), type = type, ...): supplied color is</span></span>
-<span><span class="co">## neither numeric nor character</span></span></code></pre>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/acomp.html" class="external-link">acomp</a></span><span class="op">(</span><span class="va">VS2</span><span class="op">[</span><span class="st">"0"</span>, <span class="st">"X"</span><span class="op">]</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">yield_color</span> <span class="op">&lt;-</span> <span class="fu">whitered_pal</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">VS2</span><span class="op">$</span><span class="va">YIELD</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">yield_color</span> <span class="op">&lt;-</span> <span class="va">yield_color</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/rank.html" class="external-link">rank</a></span><span class="op">(</span><span class="va">VS2</span><span class="op">$</span><span class="va">YIELD</span>,ties.method <span class="op">=</span> <span class="st">"first"</span><span class="op">)</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/acomp.html" class="external-link">acomp</a></span><span class="op">(</span><span class="va">VS2</span><span class="op">$</span><span class="va">X</span><span class="op">)</span>, col <span class="op">=</span> <span class="va">yield_color</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/acomp.html" class="external-link">acomp</a></span><span class="op">(</span><span class="va">VS2</span><span class="op">[</span><span class="st">"0"</span>, <span class="st">"X"</span><span class="op">]</span><span class="op">)</span>, add <span class="op">=</span> <span class="cn">TRUE</span>, pch <span class="op">=</span> <span class="fl">16</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vignette_files/figure-html/unnamed-chunk-15-1.png" width="700"></p>
 </div>
 </div>
@@ -465,7 +454,7 @@ are colored according to the value of rice yield.</p>
 covariates is described in Morais and Thomas-Agnan (2021). For a scalar
 on composition model the <code><a href="../reference/Impacts.html">Impacts()</a></code> method computes the
 semi-elasticities for all compositional covariates.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">RY_Impacts</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/Impacts.html">Impacts</a></span><span class="op">(</span><span class="va">fit_X_compo</span>, Xvar <span class="op">=</span> <span class="st">"TEMPERATURES"</span><span class="op">)</span></span>
 <span><span class="va">RY_Impacts</span> <span class="co"># here, the semi-elasticity is computed for the variable TEMPERATURES </span></span></code></pre></div>
 <pre><code><span><span class="co">##               YIELD</span></span>
@@ -496,7 +485,7 @@ change caused by increasing the HIGH share of the
 <code>TEMPERATURES</code> variable by <span class="math inline">\(5\%\)</span>, assuming that the ratio between the
 other two components remains constant, using the function
 <code><a href="../reference/VariationTable.html">VariationTable()</a></code>.</p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/VariationTable.html">VariationTable</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_X_compo</span>,</span>
 <span>  obs      <span class="op">=</span>  <span class="fl">1</span>,             <span class="co"># indicator of the observation (1 is default)</span></span>
@@ -521,7 +510,7 @@ assuming the ratio between the <code>LOW</code> and the
 of <span class="math inline">\(0.05\)</span>. Note that this direction
 vector will be normalized before being used within the function, and
 will later be given as output in attributes.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_X_compo.varTab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/VariationTable.html">VariationTable</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_X_compo</span>,</span>
 <span>  obs      <span class="op">=</span> <span class="fl">10</span>,               <span class="co"># indicator of the observation</span></span>
@@ -536,7 +525,7 @@ will later be given as output in attributes.</p>
 <span><span class="co">## Semi elasticity    0.024601746</span></span>
 <span><span class="co">## Variation in %     0.123008728</span></span>
 <span><span class="co">## Variation in units 0.004932926</span></span></code></pre>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">fit_X_compo.varTab</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
 <span><span class="co">## [1] "YIELD"</span></span>
@@ -595,7 +584,7 @@ diesel fuel (<code>GAS_PRICE</code>), and
 <code>SCRAPPING_SUBSIDY</code>. We also have the <code>DATE</code>,
 generally the beginning of each month in which the sale has taken
 place.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">car_market</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       DATE                SEG_A             SEG_B            SEG_C       </span></span>
 <span><span class="co">##  Min.   :2003-01-01   Min.   :0.05178   Min.   :0.3051   Min.   :0.2959  </span></span>
@@ -618,18 +607,23 @@ place.</p>
 <span><span class="co">##  Mean   :1.140   Mean   :0.1645   </span></span>
 <span><span class="co">##  3rd Qu.:1.317   3rd Qu.:0.0000   </span></span>
 <span><span class="co">##  Max.   :1.445   Max.   :1.0000</span></span></code></pre>
-<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">ggplot</span><span class="op">(</span>data<span class="op">=</span><span class="va">car_market</span>, <span class="fu">aes</span><span class="op">(</span>x<span class="op">=</span><span class="va">DATE</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">SEG_A</span>, color <span class="op">=</span> <span class="st">"SEG_A"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">SEG_B</span>, color <span class="op">=</span> <span class="st">"SEG_B"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">SEG_C</span>, color <span class="op">=</span> <span class="st">"SEG_C"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">SEG_D</span>, color <span class="op">=</span> <span class="st">"SEG_D"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>y <span class="op">=</span> <span class="va">SEG_E</span>, color <span class="op">=</span> <span class="st">"SEG_E"</span><span class="op">)</span>, linewidth <span class="op">=</span> <span class="fl">1</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"DATE"</span>, y <span class="op">=</span> <span class="st">"VALUE"</span>, color <span class="op">=</span> <span class="st">"VARIABLE"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">ggtitle</span><span class="op">(</span><span class="st">"French vehicles market shares from 2003 to 2015"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_color_manual</span><span class="op">(</span>values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"black"</span>, <span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"purple"</span><span class="op">)</span><span class="op">)</span><span class="op">+</span></span>
-<span>  <span class="fu">theme</span><span class="op">(</span>plot.title <span class="op">=</span> <span class="fu">element_text</span><span class="op">(</span>hjust <span class="op">=</span> <span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggplot(data = car_market, aes(x = DATE)): could not find function "ggplot"</span></span></code></pre>
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mar<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">4.1</span>, <span class="fl">4.1</span>, <span class="fl">8.1</span><span class="op">)</span>, xpd<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">DATE</span>, y <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">SEG_A</span>,type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"red"</span>,</span>
+<span>     main <span class="op">=</span> <span class="st">"French vehicles market shares from 2003 to 2015"</span>, </span>
+<span>     xlab <span class="op">=</span> <span class="st">"DATE"</span>, ylab <span class="op">=</span> <span class="st">"VALUE"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">0.5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">DATE</span>, y <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">SEG_B</span>,type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span> <span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">DATE</span>, y <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">SEG_C</span>,type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"green"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">DATE</span>, y <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">SEG_D</span>,type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">DATE</span>, y <span class="op">=</span> <span class="va">car_market</span><span class="op">$</span><span class="va">SEG_E</span>,type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"black"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"topright"</span>,</span>
+<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"Segment "</span>, <span class="va">LETTERS</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">]</span><span class="op">)</span>,</span>
+<span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"red"</span>, <span class="st">"blue"</span>, <span class="st">"green"</span>, <span class="st">"orange"</span>, <span class="st">"black"</span><span class="op">)</span>,</span>
+<span>       lty <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>       inset<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">0.35</span>,<span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Vignette_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="regression-step">Regression step<a class="anchor" aria-label="anchor" href="#regression-step"></a>
@@ -639,12 +633,12 @@ regression model explaining the market shares as a function of household
 expenditure, GDP, gas price and an indicator of the scrapping incentive
 period. As previously, the compositional variable must be included as a
 matrix.</p>
-<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">car_market</span><span class="op">$</span><span class="va">SEG</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">car_market</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEG_A"</span>,<span class="st">"SEG_B"</span>,<span class="st">"SEG_C"</span>,<span class="st">"SEG_D"</span>,<span class="st">"SEG_E"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">car_market</span><span class="op">$</span><span class="va">SEG</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">car_market</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SEG_A"</span>,<span class="st">"SEG_B"</span>,<span class="st">"SEG_C"</span>,<span class="st">"SEG_D"</span>,<span class="st">"SEG_E"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <p>Below we transform the response by an ilr, using the
 <code><a href="https://rdrr.io/pkg/compositions/man/ilr.html" class="external-link">ilr()</a></code> function of the <strong>compositions</strong>
 package.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_Y_compo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmCoDa.html">lmCoDa</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/ilr.html" class="external-link">ilr</a></span><span class="op">(</span><span class="va">SEG</span><span class="op">)</span> <span class="op">~</span> <span class="va">HOUSEHOLD_EXPENDITURE</span> <span class="op">+</span> <span class="va">GDP</span> <span class="op">+</span> <span class="va">GAS_PRICE</span> <span class="op">+</span> <span class="va">SCRAPPING_SUBSIDY</span>,</span>
 <span>  data<span class="op">=</span><span class="va">car_market</span><span class="op">)</span></span></code></pre></div>
@@ -653,7 +647,7 @@ package.</p>
 </h4>
 <p>The estimated coefficients are retrieved using the
 <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> function.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_Y_compo</span>, space <span class="op">=</span> <span class="st">"simplex"</span><span class="op">)</span>  <span class="co"># coefficients in the simplex</span></span></code></pre></div>
 <pre><code><span><span class="co">##                            SEG_A      SEG_B     SEG_C     SEG_D     SEG_E</span></span>
 <span><span class="co">## (Intercept)           0.00510613 0.02979117 0.0299574 0.1738140 0.7613313</span></span>
@@ -661,7 +655,7 @@ package.</p>
 <span><span class="co">## GDP                   0.19998123 0.19999792 0.2000000 0.2000025 0.2000184</span></span>
 <span><span class="co">## GAS_PRICE             0.13249844 0.12769598 0.1583048 0.1951823 0.3863185</span></span>
 <span><span class="co">## SCRAPPING_SUBSIDY     0.25071823 0.19046324 0.1729588 0.1825495 0.2033102</span></span></code></pre>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_Y_compo</span><span class="op">)</span>                     <span class="co"># ... in ilr space</span></span></code></pre></div>
 <pre><code><span><span class="co">##                            ilr(SEG)1      ilr(SEG)2      ilr(SEG)3</span></span>
 <span><span class="co">## (Intercept)            1.24717388192  0.72459957006  2.03502320226</span></span>
@@ -682,7 +676,7 @@ package.</p>
 <p>For models with compositional response the <code><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted()</a></code> also
 has a space argument allowing to retrieve the fitted values in
 coordinate space, clr space or in the simplex.</p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">fit_Y_compo</span>, space <span class="op">=</span> <span class="st">"simplex"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># coefficients in the simplex</span></span></code></pre></div>
 <pre><code><span><span class="co">##   SEG_A        SEG_B       SEG_C       SEG_D       SEG_E       </span></span>
 <span><span class="co">## 1 "0.06550853" "0.3518854" "0.3312294" "0.1636691" "0.08770752"</span></span>
@@ -693,7 +687,7 @@ coordinate space, clr space or in the simplex.</p>
 <span><span class="co">## 6 "0.06335595" "0.3558713" "0.3319754" "0.1623847" "0.08641256"</span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "acomp"</span></span></code></pre>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">fit_Y_compo</span>, space <span class="op">=</span> <span class="st">"clr"</span><span class="op">)</span><span class="op">)</span>      <span class="co"># ... in clr space</span></span></code></pre></div>
 <pre><code><span><span class="co">##        SEG_A     SEG_B     SEG_C      SEG_D      SEG_E</span></span>
 <span><span class="co">## 1 -0.9018499 0.7792754 0.7187808 0.01381641 -0.6100227</span></span>
@@ -702,7 +696,7 @@ coordinate space, clr space or in the simplex.</p>
 <span><span class="co">## 4 -0.9439949 0.7798119 0.7219066 0.01812205 -0.5758457</span></span>
 <span><span class="co">## 5 -0.9286494 0.7969295 0.7287105 0.01487411 -0.6118646</span></span>
 <span><span class="co">## 6 -0.9267313 0.7990692 0.7295609 0.01446811 -0.6163670</span></span></code></pre>
-<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/fitted.values.html" class="external-link">fitted</a></span><span class="op">(</span><span class="va">fit_Y_compo</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># ... in ilr space (as in the estimation)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       [,1]      [,2]       [,3]       [,4]</span></span>
 <span><span class="co">## 1 1.188735 0.6369230 -0.1601446 -0.6820261</span></span>
@@ -718,7 +712,7 @@ coordinate space, clr space or in the simplex.</p>
 <h4 id="resid">resid<a class="anchor" aria-label="anchor" href="#resid"></a>
 </h4>
 <p>The same functionality is available for the residuals.</p>
-<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit_Y_compo</span>, space <span class="op">=</span> <span class="st">"simplex"</span><span class="op">)</span><span class="op">)</span>  <span class="co"># coefficients in the simplex</span></span></code></pre></div>
 <pre><code><span><span class="co">##   SEG_A       SEG_B       SEG_C       SEG_D       SEG_E      </span></span>
 <span><span class="co">## 1 "0.2100350" "0.2099886" "0.1900386" "0.1819359" "0.2080019"</span></span>
@@ -729,7 +723,7 @@ coordinate space, clr space or in the simplex.</p>
 <span><span class="co">## 6 "0.1971703" "0.2164442" "0.2369534" "0.1682997" "0.1811324"</span></span>
 <span><span class="co">## attr(,"class")</span></span>
 <span><span class="co">## [1] "acomp"</span></span></code></pre>
-<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit_Y_compo</span>, space <span class="op">=</span> <span class="st">"clr"</span><span class="op">)</span><span class="op">)</span>      <span class="co"># ... in clr space</span></span></code></pre></div>
 <pre><code><span><span class="co">##          SEG_A       SEG_B       SEG_C       SEG_D       SEG_E</span></span>
 <span><span class="co">## 1  0.050722716  0.05050182 -0.04932391 -0.09289665  0.04099603</span></span>
@@ -738,7 +732,7 @@ coordinate space, clr space or in the simplex.</p>
 <span><span class="co">## 4  0.032029651  0.20305589  0.13693794  0.07587790 -0.44790138</span></span>
 <span><span class="co">## 5  0.117957913  0.07644556  0.12423438 -0.08415879 -0.23447906</span></span>
 <span><span class="co">## 6 -0.006779935  0.08648514  0.17701586 -0.16510139 -0.09161968</span></span></code></pre>
-<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb76"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/residuals.html" class="external-link">resid</a></span><span class="op">(</span><span class="va">fit_Y_compo</span><span class="op">)</span><span class="op">)</span>                     <span class="co"># ... in ilr space (as in the estimation)</span></span></code></pre></div>
 <pre><code><span><span class="co">##            [,1]        [,2]        [,3]        [,4]</span></span>
 <span><span class="co">## 1 -0.0001561993 -0.08159755 -0.09543328  0.04583496</span></span>
@@ -762,7 +756,7 @@ coordinate space, clr space or in the simplex.</p>
 </h5>
 <p>Finite increments interpretation as in Muller et al. (2018) can be
 obtained using coordinate space outputs.</p>
-<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb78"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_Y_compo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                            ilr(SEG)1      ilr(SEG)2      ilr(SEG)3</span></span>
 <span><span class="co">## (Intercept)            1.24717388192  0.72459957006  2.03502320226</span></span>
@@ -780,7 +774,7 @@ obtained using coordinate space outputs.</p>
 below, we can interpret the impact of an additive change in the
 household expenditure variable on the ratio between segment E and the
 geometric mean of the other segments.</p>
-<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb80"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/ilrBase.html" class="external-link">ilrBase</a></span><span class="op">(</span>D <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="co"># default contrast matrix</span></span></code></pre></div>
 <pre><code><span><span class="co">##         [,1]       [,2]       [,3]       [,4]</span></span>
 <span><span class="co">## 1 -0.7071068 -0.4082483 -0.2886751 -0.2236068</span></span>
@@ -808,7 +802,7 @@ of values defined by a step size, a number of steps and an initial
 observation. The first step <code><a href="../reference/VariationScenario.html">VariationScenario()</a></code> creates the
 grid for the covariate (<span class="math inline">\(X\)</span>) and
 computes the corresponding fitted values (<span class="math inline">\(Y\)</span>).</p>
-<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb82"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vs_exp2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/VariationScenario.html">VariationScenario</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_Y_compo</span>,</span>
 <span>  Xvar <span class="op">=</span> <span class="st">"HOUSEHOLD_EXPENDITURE"</span>,</span>
@@ -816,7 +810,7 @@ computes the corresponding fitted values (<span class="math inline">\(Y\)</span>
 <span>  inc_size <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  n_steps <span class="op">=</span> <span class="fl">150</span>,</span>
 <span>  add_opposite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb83"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">vs_exp2</span><span class="op">$</span><span class="va">HOUSEHOLD_EXPENDITURE</span>, y <span class="op">=</span> <span class="va">vs_exp2</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"red"</span>,</span>
 <span>     main <span class="op">=</span> <span class="st">"Variation scenario of houshold expenditure for observation 1"</span>,</span>
 <span>     xlab <span class="op">=</span> <span class="st">"Household expenditure"</span>, ylab <span class="op">=</span> <span class="st">"Market share of segment"</span><span class="op">)</span></span>
@@ -845,7 +839,7 @@ with respect to <span class="math inline">\(X\)</span>, in contrast with
 derivatives of <span class="math inline">\(Y\)</span> with respect to
 the logarithm of the components of <span class="math inline">\(X\)</span>. The <code><a href="../reference/Impacts.html">Impacts()</a></code> function
 computes these elasticities.</p>
-<div class="sourceCode" id="cb90"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb84"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/Impacts.html">Impacts</a></span><span class="op">(</span><span class="va">fit_Y_compo</span>,</span>
 <span>        Xvar <span class="op">=</span> <span class="st">"HOUSEHOLD_EXPENDITURE"</span>,</span>
 <span>        obs<span class="op">=</span><span class="fl">4</span><span class="op">)</span></span></code></pre></div>
@@ -865,7 +859,7 @@ change of any of the scalar explanatory variables.</p>
 <p>For example, we can measure the change caused by an increase of <span class="math inline">\(2500\)</span> million euros in
 <code>HOUSEHOLD_EXPENDITURE</code> using the function
 <code><a href="../reference/VariationTable.html">VariationTable()</a></code>.</p>
-<div class="sourceCode" id="cb92"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb86"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_Y_compo.VarTab</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/VariationTable.html">VariationTable</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_Y_compo</span>,                      <span class="co"># model output</span></span>
 <span>  Xvar <span class="op">=</span> <span class="st">"HOUSEHOLD_EXPENDITURE"</span>,   <span class="co"># variable to be changed</span></span>
@@ -890,7 +884,7 @@ change of any of the scalar explanatory variables.</p>
 percentage points in the “SEG_D” share, and an increase of 3 percentage
 points in the “SEG_B” share. We can visualize these changes more
 globally with a barplot.</p>
-<div class="sourceCode" id="cb94"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb88"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/barplot.html" class="external-link">barplot</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">fit_Y_compo.VarTab</span><span class="op">[</span><span class="fl">5</span>,<span class="op">]</span><span class="op">)</span>,col <span class="op">=</span> <span class="st">"cyan"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/title.html" class="external-link">title</a></span><span class="op">(</span><span class="st">"Market segment shares variations"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Vignette_files/figure-html/unnamed-chunk-33-1.png" width="700"></p>
@@ -933,7 +927,7 @@ education and at most a high school diploma, and
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb89"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"election"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##       left            right        extreme_right    </span></span>
@@ -943,7 +937,7 @@ education and at most a high school diploma, and
 <span><span class="co">##  Mean   :0.3682   Mean   :0.3841   Mean   :0.24777  </span></span>
 <span><span class="co">##  3rd Qu.:0.4322   3rd Qu.:0.4421   3rd Qu.:0.30400  </span></span>
 <span><span class="co">##  Max.   :0.7228   Max.   :0.6367   Max.   :0.41485</span></span></code></pre>
-<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb91"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span><span class="fl">4</span><span class="op">:</span><span class="fl">6</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##     Age_1839         Age_4064        Age_65plus    </span></span>
 <span><span class="co">##  Min.   :0.2270   Min.   :0.3836   Min.   :0.1536  </span></span>
@@ -952,7 +946,7 @@ education and at most a high school diploma, and
 <span><span class="co">##  Mean   :0.3140   Mean   :0.4295   Mean   :0.2566  </span></span>
 <span><span class="co">##  3rd Qu.:0.3486   3rd Qu.:0.4384   3rd Qu.:0.2872  </span></span>
 <span><span class="co">##  Max.   :0.4320   Max.   :0.4511   Max.   :0.3364</span></span></code></pre>
-<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb93"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span><span class="fl">7</span><span class="op">:</span><span class="fl">9</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##  Educ_BeforeHighschool Educ_Highschool   Educ_Higher    </span></span>
 <span><span class="co">##  Min.   :0.3484        Min.   :0.1444   Min.   :0.1617  </span></span>
@@ -961,7 +955,7 @@ education and at most a high school diploma, and
 <span><span class="co">##  Mean   :0.5889        Mean   :0.1689   Mean   :0.2422  </span></span>
 <span><span class="co">##  3rd Qu.:0.6349        3rd Qu.:0.1780   3rd Qu.:0.2670  </span></span>
 <span><span class="co">##  Max.   :0.6867        Max.   :0.2234   Max.   :0.4998</span></span></code></pre>
-<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb95"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span><span class="fl">10</span><span class="op">:</span><span class="fl">13</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##    unemp_rate      asset_owner_rate income_taxpayer_rate forgeigner_rate  </span></span>
 <span><span class="co">##  Min.   :0.08353   Min.   :0.3998   Min.   :0.4499       Min.   :0.01342  </span></span>
@@ -976,17 +970,17 @@ education and at most a high school diploma, and
 </h3>
 <p>First, we must ensure that all compositional variables are stored as
 a matrix.</p>
-<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">election</span><span class="op">$</span><span class="va">VOTE</span><span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>,<span class="st">"right"</span>,<span class="st">"extreme_right"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">election</span><span class="op">$</span><span class="va">AGE</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Age_1839"</span>,<span class="st">"Age_4064"</span>,<span class="st">"Age_65plus"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
-<span><span class="va">election</span><span class="op">$</span><span class="va">EDUC</span> <span class="op">&lt;-</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Educ_BeforeHighschool"</span>,<span class="st">"Educ_Highschool"</span>,<span class="st">"Educ_Higher"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<p>The next step consists of applying a logratio transformation (alr or
+<div class="sourceCode" id="cb97"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">election</span><span class="op">$</span><span class="va">VOTE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>,<span class="st">"right"</span>,<span class="st">"extreme_right"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">election</span><span class="op">$</span><span class="va">AGE</span>  <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Age_1839"</span>,<span class="st">"Age_4064"</span>,<span class="st">"Age_65plus"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span>
+<span><span class="va">election</span><span class="op">$</span><span class="va">EDUC</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="va">election</span><span class="op">[</span>,<span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Educ_BeforeHighschool"</span>,<span class="st">"Educ_Highschool"</span>,<span class="st">"Educ_Higher"</span><span class="op">)</span><span class="op">]</span><span class="op">)</span></span></code></pre></div>
+<p>The next step consists of applying a log-ratio transformation (alr or
 ilr) to the compositional variables and then using the “lm” function to
 perform regression in coordinates space. In this example, the response
 variable, <code>VOTE</code>, is transformed by an ilr, the variable
 <code>Age</code> is transformed by an alr, and <code>EDUC</code> is
 transformed by an ilr.</p>
-<div class="sourceCode" id="cb104"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb98"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit_YX_compo</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmCoDa.html">lmCoDa</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/ilr.html" class="external-link">ilr</a></span><span class="op">(</span><span class="va">VOTE</span><span class="op">)</span> <span class="op">~</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/compositions/man/alr.html" class="external-link">alr</a></span><span class="op">(</span><span class="va">AGE</span><span class="op">)</span> <span class="op">+</span> <span class="va">unemp_rate</span> <span class="op">+</span> <span class="va">asset_owner_rate</span> <span class="op">+</span></span>
@@ -994,7 +988,7 @@ transformed by an ilr.</p>
 <span>  data <span class="op">=</span> <span class="va">election</span><span class="op">)</span></span></code></pre></div>
 <p>With the <code><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef()</a></code> function we can access the estimated
 coefficients in coordinate space, as well as in the simplex:</p>
-<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb99"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_YX_compo</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                       ilr(VOTE)1 ilr(VOTE)2</span></span>
 <span><span class="co">## (Intercept)          -0.07020983 -6.9109264</span></span>
@@ -1006,7 +1000,7 @@ coefficients in coordinate space, as well as in the simplex:</p>
 <span><span class="co">## ilr(EDUC)2           -0.76776003  0.9077666</span></span>
 <span><span class="co">## income_taxpayer_rate  2.91875389  1.7559045</span></span>
 <span><span class="co">## forgeigner_rate      -1.45607088 -0.5496067</span></span></code></pre>
-<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb101"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, space <span class="op">=</span> <span class="st">"simplex"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                   left                right extreme_right</span></span>
 <span><span class="co">## (Intercept)            0.5247472819482  0.47514740845404074  0.0001053096</span></span>
@@ -1024,7 +1018,7 @@ coefficients in coordinate space, as well as in the simplex:</p>
 parameters by the function <code><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint()</a></code>. The following example
 is for the case of the compositional explanatory variable
 <code>AGE</code>.</p>
-<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb103"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, parm <span class="op">=</span> <span class="st">"AGE"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               Y          X         EST        SD      2.5 %     97.5 %</span></span>
 <span><span class="co">## 1          left   Age_1839 -0.15432052 0.4909885 -1.1303733 0.82173229</span></span>
@@ -1040,7 +1034,7 @@ is for the case of the compositional explanatory variable
 the same information for the differences of clr parameter values, which
 coincide with differences in elasticities (Dargel and Thomas-Agnan
 2023).</p>
-<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, parm <span class="op">=</span> <span class="st">"AGE"</span>, y_ref <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Y_ref             Y          X       DIFF        SD      2.5 %    97.5 %</span></span>
 <span><span class="co">## 1  left          left   Age_1839  0.0000000 0.0000000  0.0000000 0.0000000</span></span>
@@ -1054,7 +1048,7 @@ coincide with differences in elasticities (Dargel and Thomas-Agnan
 <span><span class="co">## 9  left extreme_right Age_65plus -0.4969056 0.3162271 -1.1255443 0.1317331</span></span></code></pre>
 <p>The following example is for the case of the scalar explanatory
 variable <code>unemp_rate</code>.</p>
-<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb107"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, parm <span class="op">=</span> <span class="st">"unemp_rate"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##               Y          X        EST       SD      2.5 %    97.5 %</span></span>
 <span><span class="co">## 1          left unemp_rate  -1.269893 2.465914  -6.171968  3.632182</span></span>
@@ -1062,7 +1056,7 @@ variable <code>unemp_rate</code>.</p>
 <span><span class="co">## 3 extreme_right unemp_rate  14.089689 1.985480  10.142685 18.036693</span></span></code></pre>
 <p>In this case the difference in clr parameters coincides with a
 semi-elasticities difference.</p>
-<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb109"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, parm <span class="op">=</span> <span class="st">"unemp_rate"</span>, y_ref <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Y_ref             Y          X      DIFF       SD      2.5 %    97.5 %</span></span>
 <span><span class="co">## 1  left          left unemp_rate   0.00000 0.000000   0.000000  0.000000</span></span>
@@ -1087,7 +1081,7 @@ consider two contrast matrices, one for the response and one for the
 explanatory composition. In the present model, the <code>VOTE</code> and
 the <code>EDUC</code> compositions are both ilr transformed with the
 default contrast matrix.</p>
-<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb111"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/compositions/man/ilrBase.html" class="external-link">ilrBase</a></span><span class="op">(</span>D <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         [,1]       [,2]</span></span>
 <span><span class="co">## 1 -0.7071068 -0.4082483</span></span>
@@ -1097,9 +1091,11 @@ default contrast matrix.</p>
 column of the corresponding parameter matrix that is expressed using the
 ilr spaces of both the response <code>VOTE</code> and the “EDUC”
 variables (whose contrast matrices coincide in our example).</p>
-<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, separate <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[[</span><span class="st">"ilr(EDUC)"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in coef(fit_YX_compo, separate = TRUE)[["ilr(EDUC)"]]: subscript out of bounds</span></span></code></pre>
+<div class="sourceCode" id="cb113"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, split <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">[[</span><span class="st">"ilr(EDUC)"</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
+<pre><code><span><span class="co">##            ilr(VOTE)1 ilr(VOTE)2</span></span>
+<span><span class="co">## ilr(EDUC)1  -1.214867 -2.2816886</span></span>
+<span><span class="co">## ilr(EDUC)2  -0.767760  0.9077666</span></span></code></pre>
 <p>The value of about <span class="math inline">\(0.90777\)</span>
 indicates that an additive unit increase in the second ilr coordinate of
 the explanatory <code>EDUC</code> composition leads to an additive
@@ -1136,7 +1132,7 @@ evolution of the other shares of <span class="math inline">\(X\)</span>.
 In the following illustration, we choose the direction of change joining
 the initial point (in this case, observation 1, Landes department) to
 the vertex <code>Age_1839</code>.</p>
-<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb115"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">VS_election</span><span class="op">&lt;-</span><span class="fu"><a href="../reference/VariationScenario.html">VariationScenario</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_YX_compo</span>,</span>
 <span>  Xvar <span class="op">=</span> <span class="st">"AGE"</span>,</span>
@@ -1144,38 +1140,31 @@ the vertex <code>Age_1839</code>.</p>
 <span>  n_steps <span class="op">=</span> <span class="fl">100</span>,</span>
 <span>  obs <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">p1</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">VS_election</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_point</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"right"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">Y</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"extreme_right"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">election</span><span class="op">$</span><span class="va">Age_1839</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va">percent</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va">percent</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"right"</span>, <span class="st">"extreme_right"</span><span class="op">)</span>,</span>
-<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Orange"</span>, <span class="st">"Dark Blue"</span>, <span class="st">"Red"</span><span class="op">)</span>,</span>
-<span>    name <span class="op">=</span> <span class="st">"Parties"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"% Age_1839"</span>, y <span class="op">=</span> <span class="st">"% VOTE"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggplot(VS_election): could not find function "ggplot"</span></span></code></pre>
-<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p2</span> <span class="op">&lt;-</span> <span class="fu">ggplot</span><span class="op">(</span><span class="va">VS_election</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"18-39"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"40-64"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_line</span><span class="op">(</span><span class="fu">aes</span><span class="op">(</span>x <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, y <span class="op">=</span> <span class="va">X</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"65_plus"</span><span class="op">)</span>, lwd <span class="op">=</span> <span class="fl">1.5</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">geom_vline</span><span class="op">(</span>xintercept <span class="op">=</span> <span class="va">election</span><span class="op">$</span><span class="va">Age_1839</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_x_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va">percent</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_y_continuous</span><span class="op">(</span>labels <span class="op">=</span> <span class="fu">scales</span><span class="fu">::</span><span class="va">percent</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">scale_color_manual</span><span class="op">(</span></span>
-<span>    breaks <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"18-39"</span>,<span class="st">"40-64"</span>, <span class="st">"65_plus"</span><span class="op">)</span>,</span>
-<span>    values <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Red"</span>, <span class="st">"Orange"</span>, <span class="st">"Dark Blue"</span><span class="op">)</span>,</span>
-<span>    name <span class="op">=</span> <span class="st">"AGE"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">labs</span><span class="op">(</span>x <span class="op">=</span> <span class="st">"% Age_1839"</span>, y <span class="op">=</span> <span class="st">"% AGE"</span><span class="op">)</span> <span class="op">+</span></span>
-<span>  <span class="fu">theme_bw</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in ggplot(VS_election): could not find function "ggplot"</span></span></code></pre>
-<div class="sourceCode" id="cb125"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">p1</span> <span class="op">/</span> <span class="va">p2</span></span></code></pre></div>
-<pre><code><span><span class="co">## Error in eval(expr, envir, enclos): object 'p1' not found</span></span></code></pre>
+<span></span>
+<span><span class="va">opar</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span>mfrow <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>,<span class="fl">1</span><span class="op">)</span>, mar <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5</span>,<span class="fl">4</span>,<span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"Orange"</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">"% Age_1839"</span>, ylab <span class="op">=</span> <span class="st">"% VOTE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"darkblue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">Y</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"top"</span>,</span>
+<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"left"</span>, <span class="st">"right"</span>, <span class="st">"extreme_right"</span><span class="op">)</span>,</span>
+<span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"darkblue"</span>, <span class="st">"red"</span><span class="op">)</span>,</span>
+<span>       lty <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, col <span class="op">=</span> <span class="st">"Orange"</span>,</span>
+<span>     xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>,<span class="fl">1</span><span class="op">)</span>, xlab <span class="op">=</span> <span class="st">"% Age_1839"</span>, ylab <span class="op">=</span> <span class="st">"% AGE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"orange"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">2</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"darkblue"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">1</span><span class="op">]</span>,  y <span class="op">=</span> <span class="va">VS_election</span><span class="op">$</span><span class="va">X</span><span class="op">[</span>,<span class="fl">3</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">1.5</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/legend.html" class="external-link">legend</a></span><span class="op">(</span><span class="st">"top"</span>,</span>
+<span>       legend <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"18-39"</span>,<span class="st">"40-64"</span>, <span class="st">"65_plus"</span><span class="op">)</span>,</span>
+<span>       col <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"darkblue"</span>, <span class="st">"red"</span><span class="op">)</span>,</span>
+<span>       lty <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
+<p><img src="Vignette_files/figure-html/unnamed-chunk-44-1.png" width="960"></p>
+<div class="sourceCode" id="cb116"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/par.html" class="external-link">par</a></span><span class="op">(</span><span class="va">opar</span><span class="op">)</span></span></code></pre></div>
 <p>The vertical line corresponds to the initial department of Landes,
 and we can read the values of its fitted vote shares on the first graph
 and the values of its age characteristics on the second.<br>
@@ -1199,7 +1188,7 @@ semi-elasticities, depending on the nature of the considered covariate)
 of covariates for a given observation. This function takes a “lmCoDa”
 object as input, along with the covariate’s name and the index of the
 observation.</p>
-<div class="sourceCode" id="cb127"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb117"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/Impacts.html">Impacts</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, Xvar <span class="op">=</span> <span class="st">'AGE'</span>, obs <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##                  left      right extreme_right</span></span>
 <span><span class="co">## Age_1839   -0.1279812 -0.2759565     0.4829556</span></span>
@@ -1224,7 +1213,7 @@ constant, using the function <code><a href="../reference/VariationTable.html">Va
 that the voting population for the first department is <span class="math inline">\(100\;000\)</span> individuals (we do not have this
 information in the dataset). The total of the response must be specified
 by the user in case he wants to know the variation in units.</p>
-<div class="sourceCode" id="cb129"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb119"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/VariationTable.html">VariationTable</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_YX_compo</span>,</span>
 <span>  Xvar <span class="op">=</span> <span class="st">"AGE"</span>,</span>
@@ -1256,7 +1245,7 @@ the sum of these changes is zero.</p>
 <p>For a general direction <span class="math inline">\((0.45,0.2,0.35)\)</span>, with an increment size
 of <span class="math inline">\(0.1\)</span>, we get the following
 results.</p>
-<div class="sourceCode" id="cb131"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb121"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">VT</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/VariationTable.html">VariationTable</a></span><span class="op">(</span></span>
 <span>  <span class="va">fit_YX_compo</span>,</span>
 <span>  Xvar <span class="op">=</span> <span class="st">"AGE"</span>,</span>
@@ -1274,7 +1263,7 @@ results.</p>
 <p>Note that this direction vector will be normalized before being used
 within the function, and will later be given as output in the table’s
 attributes.</p>
-<div class="sourceCode" id="cb133"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb123"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/attributes.html" class="external-link">attributes</a></span><span class="op">(</span><span class="va">VT</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## $names</span></span>
 <span><span class="co">## [1] "left"          "right"         "extreme_right"</span></span>
