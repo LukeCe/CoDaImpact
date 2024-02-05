@@ -1,6 +1,6 @@
 Package: CoDaImpact
 Title: Tools for interpreting CoDa regression models
-Version: 0.0.0.9001
+Version: 0.1.0
 Authors@R: c(
     person("Lukas", "Dargel", role = c("aut", "cre"),  email = "lukas.dargel@mailbox.org", comment = c(ORCID = "0000-0002-4839-506X")),
     person("Christine", "Thomas", role = c("aut"), email = "christine.thomas@tse-fr.eu"),
