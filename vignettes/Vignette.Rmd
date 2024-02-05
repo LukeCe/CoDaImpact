@@ -50,11 +50,6 @@ The **CoDaImpact** package has to be installed from GitHub for now and should be
 # remotes::install_github("LukeCe/CoDaImpact")
 library(CoDaImpact)
 library(compositions)
-library(ggplot2)
-library(RColorBrewer)
-library(classInt)
-library(plotfunctions)
-library(patchwork)
 ```
 
 # Scalar on composition regression
@@ -77,19 +72,26 @@ summary(rice_yields)
 The following plot is a ternary diagram of maximum temperature colored according to rice yield. 
 
 ```{r}
-yield_color <- classIntervals(
-  rice_yields$YIELD[1:100], n = 9,
-  style = "quantile", intervalClosure = "left")
-yield_color <- brewer.pal(n = 9, name = "OrRd")[findCols(yield_color)]
+whitered_pal <- colorRampPalette(rev(c("beige","orange","red","darkred")))
 
-plot(acomp(rice_yields$TEMPERATURES),
-     col = yield_color,
+top100 <- head(rice_yields, 250)
+whitered_col <- whitered_pal(length(top_100$YIELD))
+yield_top100 <- rank(top_100$YIELD,ties.method = "first")
+ylcol_top100 <- whitered_col[yield_top100]
+
+
+layout(matrix(1:2,ncol=2), width = c(2,1),height = c(1,1))
+plot(acomp(top_100$TEMPERATURES),
+     col = ylcol_top100,
      pch = 16)
 
-gradientLegend(rice_yields$YIELD[1:100],
-               col=sort(yield_color, decreasing = TRUE),
-               nCol = 9, dec = 1, length =0.4, depth = 0.1, inside = TRUE,
-               fit.margin = TRUE)
+
+legend_image <- as.raster(matrix(whitered_pal(20), ncol=1))
+plot(c(0,2),c(0,1),type = 'n', axes = F,xlab = '', ylab = '', main = 'Rice yield')
+yield_range <- range(top_100$YIELD)
+yield_range <- seq(min(yield_range), max(yield_range), l = 5)
+text(x=1.5, y = seq(0,1,l=5), labels = (round(yield_range,1)))
+rasterImage(legend_image, 0, 0, 1,1)
 ```
 
 
@@ -183,7 +185,7 @@ V_TEMP
 We can use this contrast matrix and the parameters in clr space to obtain the ilr parameters.
 
 ```{r}
-clr_TEMP <- coef(fit_X_compo, space = "clr", separate = TRUE)[["alr(TEMPERATURES)"]]
+clr_TEMP <- coef(fit_X_compo, space = "clr", split = TRUE)[["alr(TEMPERATURES)"]]
 ilr_TEMP <- t(V_TEMP) %*% clr_TEMP
 ilr_TEMP
 ```
@@ -237,16 +239,13 @@ VS2 <- VariationScenario(
   fit_X_compo,
   Xvar = "TEMPERATURES",
   Xdir = c(0.2, 0.5, 0.3),
-  inc_size = .2,
-  n_steps = 50,
+  inc_size = .1,
+  n_steps = 40,
   add_opposite = TRUE,
   obs=43)
 
-yield_color <- classIntervals(
-  VS2$YIELD, n = 9,
-  style = "quantile", intervalClosure = "left")
-yield_color <- brewer.pal(n = 9, name = "OrRd")[findCols(yield_color)]
-
+yield_color <- whitered_pal(length(VS2$YIELD))
+yield_color <- yield_color[rank(VS2$YIELD,ties.method = "first")]
 plot(acomp(VS2$X), col = yield_color, pch = 16)
 plot(acomp(VS2["0", "X"]), add = TRUE, pch = 16)
 
@@ -329,16 +328,20 @@ summary(car_market)
 ```
 
 ```{r}
-ggplot(data=car_market, aes(x=DATE)) +
-  geom_line(aes(y = SEG_A, color = "SEG_A"), linewidth = 1) +
-  geom_line(aes(y = SEG_B, color = "SEG_B"), linewidth = 1) +
-  geom_line(aes(y = SEG_C, color = "SEG_C"), linewidth = 1) +
-  geom_line(aes(y = SEG_D, color = "SEG_D"), linewidth = 1) +
-  geom_line(aes(y = SEG_E, color = "SEG_E"), linewidth = 1) +
-  labs(x = "DATE", y = "VALUE", color = "VARIABLE") +
-  ggtitle("French vehicles market shares from 2003 to 2015") +
-  scale_color_manual(values = c("black", "red", "blue", "green", "purple"))+
-  theme(plot.title = element_text(hjust = 0.5))
+opar <- par(mar=c(5.1, 4.1, 4.1, 8.1), xpd=TRUE)
+plot(x = car_market$DATE, y = car_market$SEG_A,type = "l", col = "red",
+     main = "French vehicles market shares from 2003 to 2015", 
+     xlab = "DATE", ylab = "VALUE", ylim = c(0,0.5))
+lines(x = car_market$DATE, y = car_market$SEG_B,type = "l", col = "blue" )
+lines(x = car_market$DATE, y = car_market$SEG_C,type = "l", col = "green")
+lines(x = car_market$DATE, y = car_market$SEG_D,type = "l", col = "orange")
+lines(x = car_market$DATE, y = car_market$SEG_E,type = "l", col = "black")
+legend("topright",
+       legend = paste0("Segment ", LETTERS[1:5]),
+       col = c("red", "blue", "green", "orange", "black"),
+       lty = 1,
+       inset=c(-0.35,0))
+par(opar)
 ```
 
 ## Regression step
@@ -347,7 +350,7 @@ We directly use the `lmCoDa()` function to fit a regression model explaining the
 As previously, the compositional variable must be included as a matrix. 
 
 ```{r}
-car_market$SEG<-as.matrix(car_market[,c("SEG_A","SEG_B","SEG_C","SEG_D","SEG_E")])
+car_market$SEG <- as.matrix(car_market[,c("SEG_A","SEG_B","SEG_C","SEG_D","SEG_E")])
 ```
 
 Below we transform the response by an ilr, using the `ilr()` function of the **compositions** package.  
@@ -506,9 +509,9 @@ summary(election[10:13])
 First, we must ensure that all compositional variables are stored as a matrix. 
 
 ```{r}
-election$VOTE<-as.matrix(election[,c("left","right","extreme_right")])
-election$AGE <-as.matrix(election[,c("Age_1839","Age_4064","Age_65plus")])
-election$EDUC <-as.matrix(election[,c("Educ_BeforeHighschool","Educ_Highschool","Educ_Higher")])
+election$VOTE <- as.matrix(election[,c("left","right","extreme_right")])
+election$AGE  <- as.matrix(election[,c("Age_1839","Age_4064","Age_65plus")])
+election$EDUC <- as.matrix(election[,c("Educ_BeforeHighschool","Educ_Highschool","Educ_Higher")])
 ```
 
 The next step consists of applying a logratio transformation (alr or ilr) to the compositional variables and then using the "lm" function to perform regression in coordinates space. 
@@ -571,7 +574,7 @@ ilrBase(D = 3)
 This means we can interpret the element in the last row and last column of the corresponding parameter matrix that is expressed using the ilr spaces of both the response `VOTE` and the "EDUC" variables (whose contrast matrices coincide in our example).
 
 ```{r}
-coef(fit_YX_compo, separate = TRUE)[["ilr(EDUC)"]]
+coef(fit_YX_compo, split = TRUE)[["ilr(EDUC)"]]
 ```
 
 The value of about $0.90777$ indicates that an additive unit increase in the second ilr coordinate of the explanatory `EDUC` composition leads to an additive increase of the second ilr coordinate of the response `VOTE` composition. 
@@ -591,7 +594,7 @@ The first one is a graph of the shares of $Y$ as a function of one of the shares
 In the following illustration, we choose the direction of change joining the initial point (in this case, observation 1, Landes department) to the vertex `Age_1839`.
 
 
-```{r, fig.width=10}
+```{r, fig.width=10, fig.height=10}
 VS_election<-VariationScenario(
   fit_YX_compo,
   Xvar = "AGE",
@@ -599,36 +602,32 @@ VS_election<-VariationScenario(
   n_steps = 100,
   obs = 1)
 
-p1 <- ggplot(VS_election) +
-  geom_point(aes(x = X[,1], y = Y[,1], col = "left"), lwd = 1.5) +
-  geom_line(aes(x = X[,1], y = Y[,2], col = "right"), lwd = 1.5) +
-  geom_line(aes(x = X[,1], y = Y[,3], col = "extreme_right"), lwd = 1.5) +
-  geom_vline(xintercept = election$Age_1839[1]) +
-  scale_x_continuous(labels = scales::percent) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_color_manual(
-    breaks = c("left", "right", "extreme_right"),
-    values = c("Orange", "Dark Blue", "Red"),
-    name = "Parties") +
-  labs(x = "% Age_1839", y = "% VOTE") +
-  theme_bw()
 
-p2 <- ggplot(VS_election) +
-  geom_line(aes(x = X[,1], y = X[,1], col = "18-39"), lwd = 1.5) +
-  geom_line(aes(x = X[,1], y = X[,2], col = "40-64"), lwd = 1.5) +
-  geom_line(aes(x = X[,1], y = X[,3], col = "65_plus"), lwd = 1.5) +
-  geom_vline(xintercept = election$Age_1839[1]) +
-  scale_x_continuous(labels = scales::percent) +
-  scale_y_continuous(labels = scales::percent) +
-  scale_color_manual(
-    breaks = c("18-39","40-64", "65_plus"),
-    values = c("Red", "Orange", "Dark Blue"),
-    name = "AGE") +
-  labs(x = "% Age_1839", y = "% AGE") +
-  theme_bw()
+opar <- par(mfrow = c(2,1), mar = c(5,4,1,2))
+plot(x = VS_election$X[,1],  y = VS_election$Y[,1], col = "Orange",
+     xlim = c(0,1), ylim = c(0,1), xlab = "% Age_1839", ylab = "% VOTE")
+lines(x = VS_election$X[,1],  y = VS_election$Y[,1], lwd = 1.5, col = "orange")
+lines(x = VS_election$X[,1],  y = VS_election$Y[,2], lwd = 1.5, col = "darkblue")
+lines(x = VS_election$X[,1],  y = VS_election$Y[,3], lwd = 1.5, col = "red")
+legend("top",
+       legend = c("left", "right", "extreme_right"),
+       col = c("orange", "darkblue", "red"),
+       lty = 1)
 
-p1 / p2
+
+plot(x = VS_election$X[,1],  y = VS_election$X[,1], col = "Orange",
+     xlim = c(0,1), ylim = c(0,1), xlab = "% Age_1839", ylab = "% AGE")
+lines(x = VS_election$X[,1],  y = VS_election$X[,1], lwd = 1.5, col = "orange")
+lines(x = VS_election$X[,1],  y = VS_election$X[,2], lwd = 1.5, col = "darkblue")
+lines(x = VS_election$X[,1],  y = VS_election$X[,3], lwd = 1.5, col = "red")
+legend("top",
+       legend = c("18-39","40-64", "65_plus"),
+       col = c("orange", "darkblue", "red"),
+       lty = 1)
+par(opar)
 ```
+
+
 
 The vertical line corresponds to the initial department of Landes, and we can read the values of its fitted vote shares on the first graph and the values of its age characteristics on the second.  
 For the specified direction, the bottom graph shows that an increase in the share of voters aged between $18$ and $39$ years corresponds to a linear decrease in the other shares.
@@ -638,6 +637,7 @@ On the top graph, we see that an increase in the share of voters aged between $1
 
 
 ### Infinitesimal increments
+
 #### Elasticities
 
 

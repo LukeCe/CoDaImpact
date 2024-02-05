@@ -23,7 +23,7 @@ It contains the following information:
 \item \code{TEMPERATURES}: a compositional variable represented as a matrix \cr
 whose columns correspond to the proportion of days in a year where the maximal
 temperature (in Celsius degrees) falls into one of the three categories:
-"LOW" (\link{-6,25.1}), "MEDIUM" (\link{25.1,35.4})  and "HIGH" (\link{35.4,45}).
+"LOW" (from -6, to 25.1), "MEDIUM" (from 25.1 to 35.4)  and "HIGH" (from 35.4 to 45).
 }
 }
 \references{
