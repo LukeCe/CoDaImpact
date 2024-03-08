@@ -26,7 +26,7 @@ Morais et. al (2018) first used this data to compare compositional and Dirichlet
 \itemize{
 \item \code{SEG_}: Corresponds to the shares of sales in each of the five market
 segments A,B,C,D and E. Where A are the smallest cars and E the largest.
-The segmentation is explained in \href{https://en.wikipedia.org/wiki/Car_classification}{wikipedia}.
+The segmentation is explained in \href{https://en.wikipedia.org/wiki/Car_classification}{Wikipedia}.
 \item \code{GDP}: GDP figures in millions at current prices
 \item \code{HOUSEHOLD_EXPENDITURE}: total household expenditure in millions at previous years prices
 \item \code{GAS_PRICE}: Corresponds to the gas price including VAT.

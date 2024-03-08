@@ -1,7 +1,7 @@
 #' @title Scenarios for variation in CoDa regressions models
 #'
 #' @description
-#' Scenarios of this type are illustrated in Dargel and Thomas-Agnan (2023).
+#' Scenarios of this type are illustrated in Dargel and Thomas-Agnan (2024).
 #' They allow to evaluate how the response variable (Y) in a CoDa model would evolve under a hypothetical scenario for linear changes in one explanatory variable (X).
 #' When the changing explanatory variable is compositional the term "linear" is understood with respect to the geometry of the simplex.
 #'
@@ -24,7 +24,7 @@
 #' @return a data.frame containing the scenario of X and the corresponding predicted values of Y
 #' @author Lukas Dargel
 #' @references
-#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Pairwise share ratio interpretations of compositional regression models”, Computational Statistics & Data Analysis 195 (2024), p. 107945
 #' @export
 #' @examples
 #'

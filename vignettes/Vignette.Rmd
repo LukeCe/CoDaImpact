@@ -27,11 +27,11 @@ It is designed to work in conjunction with the **compositions** package.
 The **compositions** package is used to fit a regression model involving compositional variables and the **CoDaImpact** package provides new functions to interpret the estimation results.
 
 The interface between the two packages is implemented by the `CoDaImpact::ToSimplex()` function which converts the usual *lm* object into an object of class *lmCoDa*.
-This new class is associated with new interpretation methods that make use of elasticities and semi-elasticities (see Morais and Thomas-Agnan, 2021) and share ratio elasticities (see Dargel and Thomas-Agnan, 2023).
+This new class is associated with new interpretation methods that make use of elasticities and semi-elasticities (see Morais and Thomas-Agnan, 2021) and share ratio elasticities (see Dargel and Thomas-Agnan, 2024).
 A finite increments interpretation is also provided in the function `CoDaImpact::VariationTable()`.
 Finally, some visualization tools are provided.
 
-The Dargel and Thomas-Agnan (2023) paper is [illustrated by vignette](https://lukece.github.io/CoDaImpact/articles/paper_Share_Ratio.html) and all materials for reproducing the results in the paper and the vignette [can be found on a dedicated GitHub repository](https://github.com/LukeCe/paper_Share_Ratio).
+The Dargel and Thomas-Agnan (2024) paper is [illustrated by vignette](https://lukece.github.io/CoDaImpact/articles/paper_Share_Ratio.html) and all materials for reproducing the results in the paper and the vignette [can be found on a dedicated GitHub repository](https://github.com/LukeCe/paper_Share_Ratio).
 
 The following three sections illustrate the use of the **CoDaImpact** package for three classes of regression models: 
 
@@ -198,7 +198,7 @@ This corresponds to a change in the `TEMPERATURES` simplex in the direction of t
 Changing for another vertex is simple by a permutation of the rows of the contrast matrix. 
 
 This method only allows to evaluate the impacts of changing a compositional covariate in the direction of a vertex. 
-In Dargel and Thomas-Agnan (2023) it is shown how the impact of more general changes in explanatory compositions can be interpreted.
+In Dargel and Thomas-Agnan (2024) it is shown how the impact of more general changes in explanatory compositions can be interpreted.
 
 #### Interpretation with clr coordinates
 
@@ -266,7 +266,7 @@ RY_Impacts # here, the semi-elasticity is computed for the variable TEMPERATURES
 
 #### Increments approach
 
- Dargel and Thomas-Agnan (2023) use semi-elasticities to interpret infinitesimal changes due to variation scenarios.
+ Dargel and Thomas-Agnan (2024) use semi-elasticities to interpret infinitesimal changes due to variation scenarios.
  The function `VariationTable` computes the impact of incremental changes in covariates on the response variable.
  The covariate increments, corresponding to linear changes in the simplex, are indexed by a direction vector and a signed intensity parameter `inc_size` and are specific to a given observation.
  Two cases are illustrated below with a direction pointing to a vertex of the simplex and a general direction. For the vertex direction, the `inc_rate` is related to the `inc_size` parameter and measures the relative change of the share corresponding to this vertex.
@@ -538,7 +538,7 @@ The following example is for the case of the compositional explanatory variable 
 ```{r}
 confint(fit_YX_compo, parm = "AGE")
 ```
-When providing the argument `y_ref` the function returns the same information for the differences of clr parameter values, which coincide with differences in elasticities (Dargel and Thomas-Agnan 2023).
+When providing the argument `y_ref` the function returns the same information for the differences of clr parameter values, which coincide with differences in elasticities (Dargel and Thomas-Agnan 2024).
 
 ```{r}
 confint(fit_YX_compo, parm = "AGE", y_ref = "left")
@@ -703,11 +703,11 @@ attributes(VT)
 
 # References
 
-Coenders, G. and Pawlowsky-Glahn, V. (2020). On interpretations of tests and effect sizes in regression models with a compositional predictor. SORT-Statistics and
-Operations Research Transactions, pages 201–220.
+Coenders, G. and Pawlowsky-Glahn, V. (2020). "On interpretations of tests and effect sizes in regression models with a compositional predictor." SORT-Statistics and Operations Research Transactions, pages 201–220.
 
-Dargel, L., and C. Thomas-Agnan (2023). "Pairwise share-ratio interpretations of compositional regression models." TSE working paper 23-1456.
+
+Dargel, L., and C. Thomas-Agnan (2024). "Pairwise share-ratio interpretations of compositional regression models." Computational Statistics & Data Analysis, Volume 195, pages 107945
 
 Morais, J., and C. Thomas-Agnan. (2021) "Impact of covariates in compositional models and simplicial derivatives." Austrian Journal of Statistics 50.2 (2021): 1-15.
 
-Muller I, Hron K, Fiserova E, Smahaj J, Cakirpaloglu P, Vancakova J (2018). Interpretation of Compositional Regression with Application to Time Budget Analysis." Austrian Journal of Statistics, 47(2).
+Muller I, Hron K, Fiserova E, Smahaj J, Cakirpaloglu P, Vancakova J (2018). "Interpretation of Compositional Regression with Application to Time Budget Analysis." Austrian Journal of Statistics, 47(2).

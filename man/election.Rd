@@ -10,7 +10,7 @@ An object of class \code{data.frame} with 95 rows and 13 columns.
 \source{
 \itemize{
 \item https://www.data.gouv.fr/fr/datasets/elections-departementales-2015-resultats-par-bureaux-de-vote
-\item https://www.insee.fr
+\item https://www.insee.fr/
 }
 }
 \usage{

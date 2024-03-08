@@ -30,7 +30,7 @@ where we have to distinguish four cases:
 \details{
 The mathematical foundation for elasticity computations in CoDa model come
 from Morais and Thomas-Agnan (2021).
-Dargel and Thomas-Agnan (2021) present further results and illustrations.
+Dargel and Thomas-Agnan (2024) present further results and illustrations.
 }
 \examples{
 res <- lmCoDa(YIELD ~ PRECIPITATION + ilr(TEMPERATURES), data = head(rice_yields,20))
@@ -38,9 +38,8 @@ Impacts(res, Xvar = "TEMPERATURES")
 
 }
 \references{
-"
 \itemize{
-\item Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+\item Dargel, Lukas and Christine Thomas-Agnan, “Pairwise share ratio interpretations of compositional regression models”, Computational Statistics & Data Analysis 195 (2024), p. 107945
 \item Morais, Joanna and Christine Thomas-Agnan. "Impact of covariates in compositional models and simplicial derivatives." Austrian Journal of Statistics 50.2 (2021): 1-15.
 }
 }

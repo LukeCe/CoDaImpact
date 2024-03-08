@@ -4,7 +4,7 @@
 #' This function allows to evaluate how a change in an explanatory variables
 #' impacts the response variable in a CoDa regression model.
 #' The changes are calculated based from the approximate formal presented
-#' in Dargel and Thomas-Agnan (2023).
+#' in Dargel and Thomas-Agnan (2024).
 #' Changes in the response variables are provided as data.frame and the
 #' underlying changes in the explanatory variable are given as attributes.
 #'
@@ -18,7 +18,7 @@
 #'   - Lukas Dargel
 #'   - Rodrigue Nasr
 #' @references
-#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Pairwise share ratio interpretations of compositional regression models”, Computational Statistics & Data Analysis 195 (2024), p. 107945
 #' @export
 #' @examples
 #'

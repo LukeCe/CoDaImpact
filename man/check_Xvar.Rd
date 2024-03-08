@@ -19,8 +19,8 @@ check_Xvar(
 a single integer or character
 }
 \description{
-Users should always specify Xvar as "NAME_SIMLEX",
-which means before logratio transformations.
+Users should always specify Xvar as "NAME_SIMPLEX",
+which means before log-ratio transformations.
 }
 \author{
 Lukas Dargel

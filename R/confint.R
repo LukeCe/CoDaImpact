@@ -1,7 +1,7 @@
 #' @title Confidence Intervals for CoDa Models
 #'
 #' @description
-#' Dargel and Thomas-Agnan (2023) show to compute variances and confidence
+#' Dargel and Thomas-Agnan (2024) show to compute variances and confidence
 #' intervals for parameters of CoDa models in log-ratio spaces.
 #'
 #' Of particular interest are the clr parameters since they can be directly
@@ -37,7 +37,7 @@
 #' @importFrom stats qt
 #' @author Lukas Dargel
 #' @references
-#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Pairwise share ratio interpretations of compositional regression models”, Computational Statistics & Data Analysis 195 (2024), p. 107945
 #' @examples
 #'
 #' ## ==== Y-compositional model ====

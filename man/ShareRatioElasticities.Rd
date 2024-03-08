@@ -32,7 +32,7 @@ the change of X musts be specified in terms of a direction in the simplex.
 }
 }
 \details{
-More details on this interpretation can be found in Dargel and Thomas-Agnan (2023) and in the accompanying vignette.
+More details on this interpretation can be found in Dargel and Thomas-Agnan (2024) and in the accompanying vignette.
 }
 \examples{
 
@@ -76,7 +76,7 @@ SRE3[1,]
 }
 \references{
 \itemize{
-\item Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+\item Dargel, Lukas and Christine Thomas-Agnan, “Pairwise share ratio interpretations of compositional regression models”, Computational Statistics & Data Analysis 195 (2024), p. 107945
 }
 }
 \author{

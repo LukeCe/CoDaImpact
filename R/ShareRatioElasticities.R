@@ -9,7 +9,7 @@
 #'
 #'
 #' @details
-#' More details on this interpretation can be found in Dargel and Thomas-Agnan (2023) and in the accompanying vignette.
+#' More details on this interpretation can be found in Dargel and Thomas-Agnan (2024) and in the accompanying vignette.
 #'
 #' @inheritParams VariationScenario
 #' @param Xdir a numeric vector, a single character, or `NULL`:
@@ -20,7 +20,7 @@
 #'
 #' @author Lukas Dargel
 #' @references
-#'   - Dargel, Lukas and Christine Thomas-Agnan, “Share-ratio interpretations of compositional regression models”, TSE Working Paper, n. 23-1456, July 2023.
+#'   - Dargel, Lukas and Christine Thomas-Agnan, “Pairwise share ratio interpretations of compositional regression models”, Computational Statistics & Data Analysis 195 (2024), p. 107945
 #' @export
 #' @examples
 #'
