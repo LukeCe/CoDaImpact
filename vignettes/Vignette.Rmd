@@ -488,7 +488,7 @@ This case is illustrated using an example from Nguyen et. al (2020) studying the
  
 This dataset contains the vote shares for 3 groups of parties (`left`, `right`, `extreme_right`) in different departments of France in the 2015 French departmental election for 95 departments in France.
 The election results originate from the French 'Ministry of the Interior'.
-The corresponding socio-economic data (for 2014) have been downloaded from the [INSEE website](https://www.insee.fr/).
+The corresponding socio-economic data (for 2014) have been downloaded from the [INSEE website](https://www.insee.fr/fr/accueil).
 The regression involves the following explanatory variables: 
 
 - four scalar variables:  the unemployment rate (`unemp_rate`), the proportion of people who own assets (`asset_owner_rate`), the proportion of people who pay income tax (`income_taxpayer_rate`), the proportion of foreigners (`forgeigner_rate`).

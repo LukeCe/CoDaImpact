@@ -8,7 +8,7 @@ bibentry(
   year     = "2024",
   volume   = "195",
   pages    = "107945",
-  doi      = "https://doi.org/10.1016/j.csda.2024.107945"
+  doi      = "10.1016/j.csda.2024.107945"
 )
 
 ## R package reference generated from DESCRIPTION metadata
