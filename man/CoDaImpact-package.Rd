@@ -4,9 +4,9 @@
 \name{CoDaImpact-package}
 \alias{CoDaImpact}
 \alias{CoDaImpact-package}
-\title{CoDaImpact: Tools for Interpreting CoDa Regression Models}
+\title{CoDaImpact: Interpreting CoDa Regression Models}
 \description{
-The CoDaImpact package implements additional tools for interpreting the results of CoDa regression models (for more details see Dargel and Thomas-Agnan (2024) \doi{10.1016/j.csda.2024.107945}). The new interpretation tools comprise variation scenarios, elasticities, elasticity differences and share ratio elasticities. These tools are independent of log-ratio transformations and allow an interpretation in the original space of shares. CoDaImpact is designed to be used with the compositions package and its ecosystem.
+Provides methods for interpreting CoDa (Compositional Data) regression models along the lines of "Pairwise share ratio interpretations of compositional regression models" (Dargel and Thomas-Agnan 2024) \doi{10.1016/j.csda.2024.107945}. The new methods include variation scenarios, elasticities, elasticity differences and share ratio elasticities. These tools are independent of log-ratio transformations and allow an interpretation in the original space of shares. 'CoDaImpact' is designed to be used with the 'compositions' package and its ecosystem.
 }
 \seealso{
 Useful links:
@@ -22,7 +22,7 @@ Useful links:
 
 Authors:
 \itemize{
-  \item Christine Thomas \email{christine.thomas@tse-fr.eu}
+  \item Christine Thomas-Agnan \email{christine.thomas@tse-fr.eu} (\href{https://orcid.org/0000-0002-6430-3110}{ORCID})
 }
 
 Other contributors:

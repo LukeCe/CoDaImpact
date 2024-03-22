@@ -60,7 +60,7 @@ compositions::plot.acomp(CoDa_path(comp_direc, comp_from,add_opposite = TRUE))
 
 # the balanced composition does not define a direction by itself
 comp_origin <- c(A = 1/3, B = 1/3, C= 1/3) # corresponds to a zero vector in real space
-\dontrun{CoDa_path(comp_origin, comp_from,add_opposite = TRUE)}
+try(CoDa_path(comp_origin, comp_from,add_opposite = TRUE))
 
 # with the dir_from_start option the direction is derived
 # from the simplex line connecting two compositions

@@ -133,6 +133,7 @@ fitted.lmCoDa <- function(object, space = NULL, ...) {
 #' @param space a character indicating in which space the prediction should
 #'   be returned. Supported are the options `c("clr", "simplex")`.
 #' @param ... passed on to [predict.lm()]
+#' @return matrix or vector
 #' @author Lukas Dargel
 #' @exportS3Method
 predict.lmCoDa <- function(object, space = NULL, ...) {

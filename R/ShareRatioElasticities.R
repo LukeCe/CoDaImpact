@@ -15,7 +15,7 @@
 #' @param Xdir a numeric vector, a single character, or `NULL`:
 #'   - if numeric `Xdir` is taken as a fixed direction in the simplex
 #'   - if character `Xdir` is interpreted as one summit of the X composition and converted to the fixed direction towards this summit
-#'   - if `NULL` the share ratio elasticities are computed for variable directions corresponding the example in Dargel and Thomas-Agnan (2023)
+#'   - if `NULL` the share ratio elasticities are computed for variable directions corresponding the example in Dargel and Thomas-Agnan (2024 Lukas Dargel & Christine Thomas-Agnan (2024) The link between multiplicative competitive interaction models and compositional data regression with a total, Journal of Applied Statistics, DOI: 10.1080/02664763.2024.2329923 )
 #' @return a data.frame
 #'
 #' @author Lukas Dargel

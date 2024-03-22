@@ -17,7 +17,7 @@ vignette: >
 
 ```{r setup0, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, error = TRUE)
-options(scipen = 999)
+oopt <- options(scipen = 999)
 ```
 
 # Introduction
@@ -699,6 +699,10 @@ attributes(VT)
 <!-- # Implementation details -->
 <!-- to find the coordinates of the parameters of the model in the simplex and clr spaces after regression, and then evaluate the impact, to finally interpret it, we constructed a function that retrieves all the information necessary to interpret the compositional regression's results in the simplex or clr spaces, including all the parameters of the regression in the simplex and clr spaces. -->
 <!-- It uses an internal function (transformationSummary) to summarize the regression's information. It returns an object of class 'lmSimplex' that contains the lm regression results, along with a list 'trSry', a list that contains the transformationSummary results, a data.frame, where rows correspond to the variables and columns to different information sets related to the transformations involved with each variable. -->
+
+```{r, include=FALSE}
+options(oopt)
+```
 
 
 # References

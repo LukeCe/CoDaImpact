@@ -101,7 +101,7 @@ NULL
 #'
 #' This data set provides an example for the use of CoDa models in geomarketing applications.
 #' The data is simulated, but realistic in the sense that the parameters used for the simulation
-#' were estimated on a real, but confidential data set (Dargel and Thomas-Agnan 2023).
+#' were estimated on a real, but confidential data set (Dargel and Thomas-Agnan 2024).
 #'
 #' @details
 #'   + `ID_IRIS`: Identifies the geographic region.
@@ -119,7 +119,7 @@ NULL
 #'   + The distances (`dist_km`) are derived from location information.
 #'   + The number of shopping trips (`visits`) are simulated by the authors.
 #' @references
-#'    Lukas Dargel, and Christine Thomas-Agnan, “The link between multiplicative competitive interaction models and compositional data regression with a total”, TSE Working Paper, n. 23-1455, July 2023.
+#'     Lukas Dargel & Christine Thomas-Agnan (2024) “The link between multiplicative competitive interaction models and compositional data regression with a total”, Journal of Applied Statistics, DOI: 10.1080/02664763.2024.2329923
 #' @author Lukas Dargel, Christine Thomas-Agnan
 #' @docType data
 #' @keywords data

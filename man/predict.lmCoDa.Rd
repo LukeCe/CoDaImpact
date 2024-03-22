@@ -14,6 +14,9 @@ be returned. Supported are the options \code{c("clr", "simplex")}.}
 
 \item{...}{passed on to \code{\link[=predict.lm]{predict.lm()}}}
 }
+\value{
+matrix or vector
+}
 \description{
 These functions work as in the usual lm object.
 They additionally offer the possibility use the \code{space} argument

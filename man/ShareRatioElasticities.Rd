@@ -15,7 +15,7 @@ ShareRatioElasticities(object, Xvar, Xdir = NULL)
 \itemize{
 \item if numeric \code{Xdir} is taken as a fixed direction in the simplex
 \item if character \code{Xdir} is interpreted as one summit of the X composition and converted to the fixed direction towards this summit
-\item if \code{NULL} the share ratio elasticities are computed for variable directions corresponding the example in Dargel and Thomas-Agnan (2023)
+\item if \code{NULL} the share ratio elasticities are computed for variable directions corresponding the example in Dargel and Thomas-Agnan (2024 Lukas Dargel & Christine Thomas-Agnan (2024) The link between multiplicative competitive interaction models and compositional data regression with a total, Journal of Applied Statistics, DOI: 10.1080/02664763.2024.2329923 )
 }}
 }
 \value{
