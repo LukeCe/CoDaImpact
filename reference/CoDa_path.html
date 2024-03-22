@@ -147,7 +147,9 @@ However, of drawing a line between a starting and end point it uses only a start
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># the balanced composition does not define a direction by itself</span></span></span>
 <span class="r-in"><span><span class="va">comp_origin</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>A <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>, B <span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">3</span>, C<span class="op">=</span> <span class="fl">1</span><span class="op">/</span><span class="fl">3</span><span class="op">)</span> <span class="co"># corresponds to a zero vector in real space</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="fu">CoDa_path</span><span class="op">(</span><span class="va">comp_origin</span>, <span class="va">comp_from</span>,add_opposite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/try.html" class="external-link">try</a></span><span class="op">(</span><span class="fu">CoDa_path</span><span class="op">(</span><span class="va">comp_origin</span>, <span class="va">comp_from</span>,add_opposite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Error in CoDa_path(comp_origin, comp_from, add_opposite = TRUE) : </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   The simplex direction is invalid!</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># with the dir_from_start option the direction is derived</span></span></span>
 <span class="r-in"><span><span class="co"># from the simplex line connecting two compositions</span></span></span>
@@ -169,7 +171,7 @@ However, of drawing a line between a starting and end point it uses only a start
 
 
     <footer><div class="pkgdown-footer-left">
-  <p></p><p>Developed by Lukas Dargel, Christine Thomas.</p>
+  <p></p><p>Developed by Lukas Dargel, Christine Thomas-Agnan.</p>
 </div>
 
 <div class="pkgdown-footer-right">

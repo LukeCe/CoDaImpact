@@ -98,11 +98,11 @@ package provides new functions to interpret the estimation results.</p>
 <em>lm</em> object into an object of class <em>lmCoDa</em>. This new
 class is associated with new interpretation methods that make use of
 elasticities and semi-elasticities (see Morais and Thomas-Agnan, 2021)
-and share ratio elasticities (see Dargel and Thomas-Agnan, 2023). A
+and share ratio elasticities (see Dargel and Thomas-Agnan, 2024). A
 finite increments interpretation is also provided in the function
 <code><a href="../reference/VariationTable.html">CoDaImpact::VariationTable()</a></code>. Finally, some visualization
 tools are provided.</p>
-<p>The Dargel and Thomas-Agnan (2023) paper is <a href="https://lukece.github.io/CoDaImpact/articles/paper_Share_Ratio.html">illustrated
+<p>The Dargel and Thomas-Agnan (2024) paper is <a href="https://lukece.github.io/CoDaImpact/articles/paper_Share_Ratio.html">illustrated
 by vignette</a> and all materials for reproducing the results in the
 paper and the vignette <a href="https://github.com/LukeCe/paper_Share_Ratio" class="external-link">can be found on a
 dedicated GitHub repository</a>.</p>
@@ -366,7 +366,7 @@ the <code>TEMPERATURES</code> simplex in the direction of the vertex
 permutation of the rows of the contrast matrix.</p>
 <p>This method only allows to evaluate the impacts of changing a
 compositional covariate in the direction of a vertex. In Dargel and
-Thomas-Agnan (2023) it is shown how the impact of more general changes
+Thomas-Agnan (2024) it is shown how the impact of more general changes
 in explanatory compositions can be interpreted.</p>
 </div>
 <div class="section level5">
@@ -465,7 +465,7 @@ semi-elasticities for all compositional covariates.</p>
 <div class="section level5">
 <h5 id="increments-approach">Increments approach<a class="anchor" aria-label="anchor" href="#increments-approach"></a>
 </h5>
-<p>Dargel and Thomas-Agnan (2023) use semi-elasticities to interpret
+<p>Dargel and Thomas-Agnan (2024) use semi-elasticities to interpret
 infinitesimal changes due to variation scenarios. The function
 <code>VariationTable</code> computes the impact of incremental changes
 in covariates on the response variable. The covariate increments,
@@ -906,8 +906,8 @@ French departmental elections in 2015.</p>
 different departments of France in the 2015 French departmental election
 for 95 departments in France. The election results originate from the
 French ‘Ministry of the Interior’. The corresponding socio-economic data
-(for 2014) have been downloaded from the <a href="https://www.insee.fr/" class="external-link">INSEE website</a>. The regression involves
-the following explanatory variables:</p>
+(for 2014) have been downloaded from the <a href="https://www.insee.fr/fr/accueil" class="external-link">INSEE website</a>. The regression
+involves the following explanatory variables:</p>
 <ul>
 <li>four scalar variables: the unemployment rate
 (<code>unemp_rate</code>), the proportion of people who own assets
@@ -1033,7 +1033,7 @@ is for the case of the compositional explanatory variable
 <p>When providing the argument <code>y_ref</code> the function returns
 the same information for the differences of clr parameter values, which
 coincide with differences in elasticities (Dargel and Thomas-Agnan
-2023).</p>
+2024).</p>
 <div class="sourceCode" id="cb105"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/confint.html" class="external-link">confint</a></span><span class="op">(</span><span class="va">fit_YX_compo</span>, parm <span class="op">=</span> <span class="st">"AGE"</span>, y_ref <span class="op">=</span> <span class="st">"left"</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Y_ref             Y          X       DIFF        SD      2.5 %    97.5 %</span></span>
@@ -1303,18 +1303,18 @@ attributes.</p>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<p>Coenders, G. and Pawlowsky-Glahn, V. (2020). On interpretations of
+<p>Coenders, G. and Pawlowsky-Glahn, V. (2020). “On interpretations of
 tests and effect sizes in regression models with a compositional
-predictor. SORT-Statistics and Operations Research Transactions, pages
+predictor.” SORT-Statistics and Operations Research Transactions, pages
 201–220.</p>
-<p>Dargel, L., and C. Thomas-Agnan (2023). “Pairwise share-ratio
-interpretations of compositional regression models.” TSE working paper
-23-1456.</p>
+<p>Dargel, L., and C. Thomas-Agnan (2024). “Pairwise share-ratio
+interpretations of compositional regression models.” Computational
+Statistics &amp; Data Analysis, Volume 195, pages 107945</p>
 <p>Morais, J., and C. Thomas-Agnan. (2021) “Impact of covariates in
 compositional models and simplicial derivatives.” Austrian Journal of
 Statistics 50.2 (2021): 1-15.</p>
 <p>Muller I, Hron K, Fiserova E, Smahaj J, Cakirpaloglu P, Vancakova J
-(2018). Interpretation of Compositional Regression with Application to
+(2018). “Interpretation of Compositional Regression with Application to
 Time Budget Analysis.” Austrian Journal of Statistics, 47(2).</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
@@ -1325,7 +1325,7 @@ Time Budget Analysis.” Austrian Journal of Statistics, 47(2).</p>
 
     <footer><div class="pkgdown-footer-left">
   <p></p>
-<p>Developed by Lukas Dargel, Christine Thomas.</p>
+<p>Developed by Lukas Dargel, Christine Thomas-Agnan.</p>
 </div>
 
 <div class="pkgdown-footer-right">
